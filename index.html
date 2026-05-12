@@ -7,38 +7,43 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { width: 100%; height: 100%; display: block; overflow: hidden; -webkit-text-size-adjust: 100%; }
+html, body { width: 100%; height: 100%; display: block; overflow: hidden; -webkit-text-size-adjust: 100%; background:#bae6fd; }
 input, select, textarea, button { font-size: 16px; }
 
-/* ─── background — soft lavender ─── */
+/* ─── background — soft sky blue (same as Whole_process) ─── */
 .card {
   position: relative; z-index: 1;
   width: 100vw; height: 100vh; height: 100dvh;
-  background: linear-gradient(170deg, #f7f3fc 0%, #ece1f5 45%, #d8c5ea 100%);
+  background: linear-gradient(170deg, #cff4ff 0%, #bae6fd 45%, #90d8f5 100%);
 }
 
-/* ─── question text (top area) ─── */
+/* ─── question text ─── */
 #questionEl {
   position: absolute; left: 0; right: 0;
-  top: 16%;
+  top: 13%;
   text-align: center;
   font-family: 'ZCOOL XiaoWei', serif; font-size: 15px; letter-spacing: 1.5px;
-  color: rgba(85, 50, 130, 0.88); line-height: 1.9;
+  color: rgba(20, 60, 100, 0.92); line-height: 1.9;
   z-index: 30; opacity: 0; pointer-events: none;
   transition: opacity 0.6s ease;
   padding: 0 36px;
 }
 #questionEl.visible { opacity: 1; }
+#questionEl em {
+  font-style: normal;
+  color: rgba(0, 60, 110, 1);
+  font-weight: 600;
+}
 
-/* ─── action buttons — placed AT heart, larger ─── */
+/* ─── action buttons — at heart, tight pair ─── */
 .act-btn {
   position: absolute; z-index: 30;
   padding: 11px 30px; border-radius: 99px;
-  border: 1px solid rgba(160, 120, 200, 0.45);
-  background: rgba(255, 252, 255, 0.7); backdrop-filter: blur(12px);
+  border: 1px solid rgba(70, 130, 180, 0.45);
+  background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   font-family: 'ZCOOL XiaoWei', serif; font-size: 17px;
-  letter-spacing: 3px; color: rgba(95, 55, 145, 0.95);
+  letter-spacing: 3px; color: rgba(20, 70, 120, 0.95);
   cursor: pointer; white-space: nowrap;
   opacity: 0; pointer-events: none;
   transition: opacity 0.5s ease, transform 0.2s ease, background 0.2s ease;
@@ -47,18 +52,18 @@ input, select, textarea, button { font-size: 16px; }
 }
 .act-btn.visible { opacity: 1; pointer-events: auto; }
 .act-btn:active { transform: translate(-50%, -50%) scale(0.95); }
-.act-btn:hover { background: rgba(240, 225, 250, 0.85); }
+.act-btn:hover { background: rgba(255, 255, 255, 0.85); }
 
-/* both buttons sit tight at heart center (50.8%), offset left/right by half button width + small gap */
+/* heart is at x=183/360 ≈ 50.8% — buttons sit tight either side */
 #btnYes    { left: calc(50.8% + 48px); }
 #btnNo     { left: calc(50.8% - 48px); }
-#btnCan    { left: calc(50.8% + 48px); }
-#btnCannot { left: calc(50.8% - 48px); }
+#btnCan    { left: calc(50.8% + 56px); }
+#btnCannot { left: calc(50.8% - 56px); }
 
-/* ─── ripple element ─── */
+/* ─── ripple ─── */
 .ripple-el {
   position: absolute; border-radius: 50%; pointer-events: none; z-index: 6;
-  background: radial-gradient(circle, rgba(180, 130, 220, 0.55) 0%, rgba(180, 130, 220, 0) 70%);
+  background: radial-gradient(circle, rgba(120, 180, 230, 0.55) 0%, rgba(120, 180, 230, 0) 70%);
   animation: rippleRelease 1.5s ease-out forwards;
   transform-origin: center center;
 }
@@ -67,7 +72,7 @@ input, select, textarea, button { font-size: 16px; }
   100% { transform: translate(-50%,-50%) scale(4.5); opacity: 0; }
 }
 
-/* ─── heart glow animation ─── */
+/* ─── heart glow ─── */
 @keyframes heartPulse {
   0%,100% { opacity: 0.45; r: 56; }
   50%     { opacity: 0.85; r: 70; }
@@ -81,80 +86,22 @@ input, select, textarea, button { font-size: 16px; }
 }
 #svgHeartGlow.flash { animation: heartFlash 1.2s ease-out 1, heartPulse 3.5s ease-in-out infinite 1.2s; }
 
-/* ─── human figure layered glow ─── */
-@keyframes hg1{0%,100%{opacity:0.08}50%{opacity:0.22}}
-@keyframes hg2{0%,100%{opacity:0.18}50%{opacity:0.5}}
-@keyframes hg3{0%,100%{opacity:0.38}50%{opacity:0.85}}
-@keyframes hcore{0%,100%{opacity:0.5}50%{opacity:1}}
+/* ─── human figure (white glow, like Whole_process) ─── */
+@keyframes hg1{0%,100%{opacity:0.10}50%{opacity:0.28}}
+@keyframes hg2{0%,100%{opacity:0.22}50%{opacity:0.55}}
+@keyframes hg3{0%,100%{opacity:0.42}50%{opacity:0.92}}
+@keyframes hcore{0%,100%{opacity:0.55}50%{opacity:1}}
 .hg1{animation:hg1 6s ease-in-out infinite;}
 .hg2{animation:hg2 5s ease-in-out infinite 0.5s;}
 .hg3{animation:hg3 4s ease-in-out infinite 1s;}
 .hcore{animation:hcore 4s ease-in-out infinite;}
 
-/* ─── desire orb ─── */
-.desire-orb {
-  position: absolute;
-  width: 130px; height: 130px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'ZCOOL XiaoWei', serif;
-  font-size: 14px; letter-spacing: 2.5px;
-  white-space: pre-line; text-align: center; line-height: 1.5;
-  pointer-events: none;
-  z-index: 20;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.4);
-  transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), top 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+/* ─── desire bubble pulsing ring ─── */
+@keyframes desireRingPulse {
+  0%,100% { r: 44; stroke-opacity: 0.5; }
+  50%     { r: 50; stroke-opacity: 0.2; }
 }
-.desire-orb.visible {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-.desire-orb.float-away {
-  opacity: 0;
-  transform: translate(-50%, -150%) scale(0.6);
-  transition: opacity 1.4s ease-out, transform 1.6s cubic-bezier(0.4, 0, 0.6, 1);
-}
-
-.desire-orb.d-control {
-  background: radial-gradient(circle at 32% 28%,
-    rgba(255, 220, 200, 0.95) 0%,
-    rgba(255, 204, 160, 0.78) 30%,
-    rgba(192, 80, 48, 0.55) 70%,
-    rgba(122, 32, 16, 0.42) 100%);
-  color: #4a1408;
-  box-shadow:
-    inset 0 0 30px rgba(255, 200, 160, 0.7),
-    0 0 40px rgba(184, 64, 64, 0.45),
-    0 0 80px rgba(184, 64, 64, 0.25);
-  border: 1.5px solid rgba(255, 220, 180, 0.7);
-}
-.desire-orb.d-approval {
-  background: radial-gradient(circle at 32% 28%,
-    rgba(240, 220, 255, 0.95) 0%,
-    rgba(224, 184, 255, 0.78) 30%,
-    rgba(144, 80, 176, 0.55) 70%,
-    rgba(90, 24, 128, 0.42) 100%);
-  color: #2d0848;
-  box-shadow:
-    inset 0 0 30px rgba(230, 195, 255, 0.7),
-    0 0 40px rgba(144, 80, 176, 0.45),
-    0 0 80px rgba(144, 80, 176, 0.25);
-  border: 1.5px solid rgba(230, 200, 255, 0.7);
-}
-.desire-orb.d-safety {
-  background: radial-gradient(circle at 32% 28%,
-    rgba(210, 240, 255, 0.95) 0%,
-    rgba(160, 224, 255, 0.78) 30%,
-    rgba(32, 128, 160, 0.55) 70%,
-    rgba(10, 72, 96, 0.42) 100%);
-  color: #042438;
-  box-shadow:
-    inset 0 0 30px rgba(180, 230, 255, 0.7),
-    0 0 40px rgba(32, 128, 160, 0.45),
-    0 0 80px rgba(32, 128, 160, 0.25);
-  border: 1.5px solid rgba(200, 235, 255, 0.7);
-}
+.desire-ring { animation: desireRingPulse 3s ease-in-out infinite; }
 
 /* ─── bottom bar ─── */
 #bottomBar {
@@ -166,26 +113,26 @@ input, select, textarea, button { font-size: 16px; }
 }
 .bottom-text {
   font-family: 'ZCOOL XiaoWei', serif; font-size: 12px;
-  letter-spacing: 2px; color: rgba(110, 70, 160, 0.55);
+  letter-spacing: 2px; color: rgba(20, 70, 120, 0.6);
 }
 .bottom-btn {
   padding: 7px 16px; border-radius: 99px;
-  border: 1px solid rgba(160, 120, 200, 0.3);
-  background: rgba(255, 252, 255, 0.5); backdrop-filter: blur(10px);
+  border: 1px solid rgba(70, 130, 180, 0.3);
+  background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   font-family: 'ZCOOL XiaoWei', serif; font-size: 12px;
-  letter-spacing: 2px; color: rgba(110, 70, 160, 0.75);
+  letter-spacing: 2px; color: rgba(20, 70, 120, 0.75);
   cursor: pointer; transition: background 0.2s ease;
 }
-.bottom-btn:hover { background: rgba(240, 225, 250, 0.75); }
+.bottom-btn:hover { background: rgba(255, 255, 255, 0.75); }
 .bottom-btn:active { transform: scale(0.96); }
 
 /* ═════════════════════════════════════════════════════════
-   HOME PAGE — floating glass bubbles
+   HOME PAGE — floating glass bubbles (sky blue theme)
    ═════════════════════════════════════════════════════════ */
 .home-page {
   position: absolute; inset: 0; z-index: 50;
-  background: linear-gradient(170deg, #f7f3fc 0%, #ece1f5 45%, #d8c5ea 100%);
+  background: linear-gradient(170deg, #cff4ff 0%, #bae6fd 45%, #90d8f5 100%);
   overflow: hidden;
   transition: opacity 0.5s ease;
 }
@@ -195,7 +142,7 @@ input, select, textarea, button { font-size: 16px; }
   position: absolute; top: 70px; left: 0; right: 0;
   text-align: center;
   font-family: 'ZCOOL XiaoWei', serif; font-size: 22px;
-  letter-spacing: 8px; color: rgba(85, 50, 130, 0.85);
+  letter-spacing: 8px; color: rgba(15, 60, 110, 0.9);
   z-index: 5; pointer-events: none;
 }
 
@@ -205,7 +152,7 @@ input, select, textarea, button { font-size: 16px; }
   display: flex; align-items: center; justify-content: center;
   font-family: 'ZCOOL XiaoWei', serif;
   letter-spacing: 2px;
-  color: rgba(70, 35, 120, 0.95);
+  color: rgba(15, 60, 110, 0.95);
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
@@ -224,13 +171,12 @@ input, select, textarea, button { font-size: 16px; }
   animation-delay: var(--bob-delay, 0s);
 }
 
-/* loading */
 #loadingOverlay {
   position: absolute; inset: 0; z-index: 60;
-  background: linear-gradient(170deg, #f7f3fc 0%, #ece1f5 45%, #d8c5ea 100%);
+  background: linear-gradient(170deg, #cff4ff 0%, #bae6fd 45%, #90d8f5 100%);
   display: flex; align-items: center; justify-content: center;
   font-family: 'ZCOOL XiaoWei', serif; font-size: 14px;
-  letter-spacing: 3px; color: rgba(95, 60, 130, 0.7);
+  letter-spacing: 3px; color: rgba(15, 60, 110, 0.7);
   transition: opacity 0.4s ease;
 }
 #loadingOverlay.hidden { opacity: 0; pointer-events: none; }
@@ -249,31 +195,35 @@ input, select, textarea, button { font-size: 16px; }
   <div id="questionEl"></div>
 
   <svg id="sv" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:5;pointer-events:none;" viewBox="0 0 360 640">
-    <defs>
+    <defs id="svgDefs">
       <filter id="f1" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="10"/></filter>
       <filter id="f2" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="20"/></filter>
       <filter id="f3" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="36"/></filter>
+      <filter id="fd"  x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="9"/></filter>
       <radialGradient id="heartGradient" cx="50%" cy="50%" r="50%">
-        <stop offset="0%"   stop-color="rgba(180,130,220,1)" stop-opacity="0.9"/>
-        <stop offset="40%"  stop-color="rgba(160,110,210,1)" stop-opacity="0.35"/>
-        <stop offset="100%" stop-color="rgba(160,110,210,1)" stop-opacity="0"/>
+        <stop offset="0%"   stop-color="rgba(110,180,235,1)" stop-opacity="0.9"/>
+        <stop offset="40%"  stop-color="rgba(80,150,220,1)"  stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="rgba(80,150,220,1)"  stop-opacity="0"/>
       </radialGradient>
     </defs>
 
+    <!-- Human figure (white glow like Whole_process) -->
     <path class="hg1" d="M330 580 C330 490 320 410 312 372 C303 333 272 323 247 318 C222 313 210 303 210 276 C210 261 210 248 219 239 C241 213 232 143 183 143 C134 143 125 213 147 239 C156 248 156 261 156 276 C156 303 144 313 119 318 C94 323 63 333 54 372 C45 411 36 490 36 580"
-      stroke="#c8a8eb" stroke-width="80" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#f3)"/>
+      stroke="#fff" stroke-width="80" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#f3)"/>
     <path class="hg2" d="M330 580 C330 490 320 410 312 372 C303 333 272 323 247 318 C222 313 210 303 210 276 C210 261 210 248 219 239 C241 213 232 143 183 143 C134 143 125 213 147 239 C156 248 156 261 156 276 C156 303 144 313 119 318 C94 323 63 333 54 372 C45 411 36 490 36 580"
-      stroke="#d8c5ea" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#f2)"/>
+      stroke="#fff" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#f2)"/>
     <path class="hg3" d="M330 580 C330 490 320 410 312 372 C303 333 272 323 247 318 C222 313 210 303 210 276 C210 261 210 248 219 239 C241 213 232 143 183 143 C134 143 125 213 147 239 C156 248 156 261 156 276 C156 303 144 313 119 318 C94 323 63 333 54 372 C45 411 36 490 36 580"
-      stroke="#f3e8fa" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#f1)"/>
+      stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#f1)"/>
     <path class="hcore" d="M330 580 C330 490 320 410 312 372 C303 333 272 323 247 318 C222 313 210 303 210 276 C210 261 210 248 219 239 C241 213 232 143 183 143 C134 143 125 213 147 239 C156 248 156 261 156 276 C156 303 144 313 119 318 C94 323 63 333 54 372 C45 411 36 490 36 580"
-      stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 
+    <!-- heart energy glow (chest center) -->
     <circle id="svgHeartGlow" cx="183" cy="380" r="60"
       fill="url(#heartGradient)" opacity="0.85"/>
-  </svg>
 
-  <div id="desireOrb" class="desire-orb"></div>
+    <!-- bubbles layer (desire orbs go here) -->
+    <g id="bubblesLayer"></g>
+  </svg>
 
   <button class="act-btn" id="btnYes">是</button>
   <button class="act-btn" id="btnNo">否</button>
@@ -289,13 +239,51 @@ input, select, textarea, button { font-size: 16px; }
 <div id="loadingOverlay">加载中…</div>
 
 <script>
+// ═══════════════════════════════════════════════════════════
+//  CONSTANTS
+// ═══════════════════════════════════════════════════════════
+const NS = 'http://www.w3.org/2000/svg';
+
+// Three desires — matching Whole_process palette + positions
+const DESIRES = {
+  control: {
+    name: '想要控制',
+    glow: '#b84040', stroke: '#ffcca0',
+    s: ['#ffcca0','#c05030','#7a2010'],
+    bodyPos: { x: 123, y: 370 }   // chest-left
+  },
+  approval: {
+    name: '想要被认同',
+    glow: '#9050b0', stroke: '#e0b8ff',
+    s: ['#e0b8ff','#9050b0','#5a1880'],
+    bodyPos: { x: 243, y: 370 }   // chest-right
+  },
+  safety: {
+    name: '想要安全',
+    glow: '#2080a0', stroke: '#a0e0ff',
+    s: ['#a0e0ff','#2080a0','#0a4860'],
+    bodyPos: { x: 183, y: 455 }   // belly-center
+  }
+};
+
+// Head target position (where the chosen orb floats up to)
+const HEAD_X = 183, HEAD_Y = 110;
+
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
 let BELIEFS = null;
 let CURRENT_QUEUE = [];
 let QUEUE_INDEX = 0;
 let CURRENT_Q = null;
-let PHASE = 'question';
+let PHASE = 'question'; // 'question' | 'release'
 let CURRENT_CATEGORY = 'all';
+let desireBubbles = {}; // { control: el, approval: el, safety: el }
+let gradientCounter = 0;
 
+// ═══════════════════════════════════════════════════════════
+//  STORAGE
+// ═══════════════════════════════════════════════════════════
 const STORAGE_KEY = 'lb_progress_v1';
 
 function loadProgress() {
@@ -328,17 +316,9 @@ function incrementProgress(question) {
   updateCounter();
 }
 
-const DESIRE_LABELS = {
-  control:  '想要\n控制',
-  approval: '想要被\n认同',
-  safety:   '想要\n安全'
-};
-const DESIRE_CLASSES = {
-  control:  'd-control',
-  approval: 'd-approval',
-  safety:   'd-safety'
-};
-
+// ═══════════════════════════════════════════════════════════
+//  LOAD BELIEFS
+// ═══════════════════════════════════════════════════════════
 async function loadBeliefs() {
   try {
     const res = await fetch('beliefs.json');
@@ -353,6 +333,9 @@ async function loadBeliefs() {
   }
 }
 
+// ═══════════════════════════════════════════════════════════
+//  HOME PAGE
+// ═══════════════════════════════════════════════════════════
 function initHomePage() {
   const container = document.getElementById('bubblesContainer');
   container.innerHTML = '';
@@ -390,21 +373,24 @@ function initHomePage() {
 function applyGlassBubbleStyle(el) {
   el.style.background = [
     'radial-gradient(circle at 32% 28%,',
-    '  rgba(255,255,255,0.75) 0%,',
-    '  rgba(245,235,255,0.45) 22%,',
-    '  rgba(190,150,230,0.30) 50%,',
-    '  rgba(170,120,210,0.22) 75%,',
-    '  rgba(150,100,200,0.10) 100%)'
+    '  rgba(255,255,255,0.8) 0%,',
+    '  rgba(220,240,255,0.5) 22%,',
+    '  rgba(140,200,240,0.32) 50%,',
+    '  rgba(100,170,220,0.22) 75%,',
+    '  rgba(80,150,210,0.10) 100%)'
   ].join('');
   el.style.boxShadow = [
-    'inset 0 0 35px rgba(190,150,230,0.55)',
-    'inset 0 0 14px rgba(170,120,210,0.45)',
-    '0 4px 22px rgba(170,120,210,0.55)',
-    '0 0 32px rgba(190,150,230,0.30)'
+    'inset 0 0 35px rgba(140,200,240,0.6)',
+    'inset 0 0 14px rgba(100,170,220,0.5)',
+    '0 4px 22px rgba(100,170,220,0.55)',
+    '0 0 32px rgba(140,200,240,0.32)'
   ].join(', ');
   el.style.border = 'none';
 }
 
+// ═══════════════════════════════════════════════════════════
+//  SESSION
+// ═══════════════════════════════════════════════════════════
 function startSession(categoryId) {
   CURRENT_CATEGORY = categoryId;
   let pool = (categoryId === 'all')
@@ -427,7 +413,6 @@ function shuffle(arr) {
 }
 
 function showNextQuestion() {
-  // infinite loop
   if (QUEUE_INDEX >= CURRENT_QUEUE.length) {
     CURRENT_QUEUE = shuffle(CURRENT_QUEUE);
     QUEUE_INDEX = 0;
@@ -436,8 +421,14 @@ function showNextQuestion() {
   PHASE = 'question';
   hideBtn('btnCan');
   hideBtn('btnCannot');
-  resetDesireOrb();
 
+  // clear any leftover desire bubbles
+  clearDesireBubbles();
+
+  // spawn all 3 desire bubbles in the body with staggered fade-in
+  spawnAllDesires();
+
+  // show question text
   const qEl = document.getElementById('questionEl');
   qEl.textContent = CURRENT_Q.question;
   setTimeout(() => {
@@ -446,81 +437,185 @@ function showNextQuestion() {
       showBtn('btnYes');
       showBtn('btnNo');
     }, 400);
-  }, 100);
+  }, 200);
 }
 
+// ═══════════════════════════════════════════════════════════
+//  DESIRE BUBBLES (SVG, matching Whole_process style)
+// ═══════════════════════════════════════════════════════════
+function spawnAllDesires() {
+  ['control', 'approval', 'safety'].forEach((key, i) => {
+    setTimeout(() => {
+      spawnDesireBubble(key);
+    }, i * 280);
+  });
+}
+
+function spawnDesireBubble(key) {
+  const d = DESIRES[key];
+  const layer = document.getElementById('bubblesLayer');
+  const defs = document.getElementById('svgDefs');
+
+  // gradient
+  const gid = 'grad_' + (gradientCounter++);
+  const rg = document.createElementNS(NS, 'radialGradient');
+  rg.setAttribute('id', gid);
+  rg.setAttribute('cx','38%'); rg.setAttribute('cy','32%'); rg.setAttribute('r','65%');
+  const stops = [
+    [d.s[0], 0.95, '0%'],
+    [d.s[1], 0.78, '55%'],
+    [d.s[2], 0.68, '100%']
+  ];
+  stops.forEach(([c, op, off]) => {
+    const st = document.createElementNS(NS,'stop');
+    st.setAttribute('offset', off);
+    st.setAttribute('stop-color', c);
+    st.setAttribute('stop-opacity', op);
+    rg.appendChild(st);
+  });
+  defs.appendChild(rg);
+
+  const g = document.createElementNS(NS, 'g');
+  g.setAttribute('transform', `translate(${d.bodyPos.x},${d.bodyPos.y})`);
+  g.style.opacity = '0';
+  g.style.transition = 'opacity 0.8s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1)';
+
+  // pulsing ring
+  const ring = document.createElementNS(NS, 'circle');
+  ring.setAttribute('r', 44);
+  ring.setAttribute('fill', 'none');
+  ring.setAttribute('stroke', d.stroke);
+  ring.setAttribute('stroke-width', '1.2');
+  ring.setAttribute('stroke-opacity', '0.5');
+  ring.classList.add('desire-ring');
+
+  // outer glow
+  const glC = document.createElementNS(NS, 'circle');
+  glC.setAttribute('r', 46);
+  glC.setAttribute('fill', d.glow);
+  glC.setAttribute('filter', 'url(#fd)');
+  glC.style.opacity = '0.35';
+
+  // body
+  const bod = document.createElementNS(NS, 'circle');
+  bod.setAttribute('r', 40);
+  bod.setAttribute('fill', `url(#${gid})`);
+
+  // rim
+  const rim = document.createElementNS(NS, 'circle');
+  rim.setAttribute('r', 40);
+  rim.setAttribute('fill', 'none');
+  rim.setAttribute('stroke', d.stroke);
+  rim.setAttribute('stroke-width', '1.4');
+  rim.setAttribute('stroke-opacity', '0.9');
+
+  // sparkle dots
+  [-10, 10].forEach(dx => {
+    const dot = document.createElementNS(NS, 'circle');
+    dot.setAttribute('r', '2');
+    dot.setAttribute('cx', dx);
+    dot.setAttribute('cy', '-8');
+    dot.setAttribute('fill', 'white');
+    dot.setAttribute('fill-opacity', '0.35');
+    g.appendChild(dot);
+  });
+
+  // highlight
+  const h1 = document.createElementNS(NS, 'ellipse');
+  h1.setAttribute('rx', '12');
+  h1.setAttribute('ry', '6');
+  h1.setAttribute('fill', 'white');
+  h1.setAttribute('fill-opacity', '0.28');
+  h1.setAttribute('transform', 'translate(-10,-13)');
+
+  // label
+  const tx = document.createElementNS(NS, 'text');
+  tx.setAttribute('text-anchor', 'middle');
+  tx.setAttribute('dy', '0.35em');
+  tx.setAttribute('font-size', '9');
+  tx.setAttribute('font-family', "'Noto Serif SC',serif");
+  tx.setAttribute('fill', 'white');
+  tx.setAttribute('fill-opacity', '0.92');
+  tx.textContent = d.name;
+
+  [ring, glC, bod, rim, h1, tx].forEach(el => g.appendChild(el));
+  layer.appendChild(g);
+
+  // fade in
+  requestAnimationFrame(() => { g.style.opacity = '1'; });
+
+  desireBubbles[key] = { el: g, gid, key };
+}
+
+function clearDesireBubbles() {
+  const layer = document.getElementById('bubblesLayer');
+  layer.innerHTML = '';
+  desireBubbles = {};
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ANSWER: 否
+// ═══════════════════════════════════════════════════════════
 function onAnswerNo() {
   hideBtn('btnYes');
   hideBtn('btnNo');
   hideEl('questionEl');
+  // fade out all desire bubbles
+  fadeOutAllDesires();
   setTimeout(() => {
     QUEUE_INDEX += 1;
     showNextQuestion();
-  }, 500);
+  }, 600);
 }
 
+function fadeOutAllDesires() {
+  Object.values(desireBubbles).forEach(b => {
+    b.el.style.opacity = '0';
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ANSWER: 是 → release phase
+// ═══════════════════════════════════════════════════════════
 function onAnswerYes() {
   flashHeart();
   hideBtn('btnYes');
   hideBtn('btnNo');
   hideEl('questionEl');
   PHASE = 'release';
+
+  const chosenKey = CURRENT_Q.desire;
+
+  // fade out the two non-chosen bubbles
+  Object.keys(desireBubbles).forEach(key => {
+    if (key !== chosenKey) {
+      desireBubbles[key].el.style.opacity = '0';
+    }
+  });
+
+  // float chosen bubble up to head
   setTimeout(() => {
-    // show release prompt text
-    showReleasePrompt();
-    // spawn desire orb from heart
-    spawnDesireOrb();
+    const chosen = desireBubbles[chosenKey];
+    if (chosen) {
+      chosen.el.setAttribute('transform', `translate(${HEAD_X},${HEAD_Y})`);
+    }
+
+    // show release question (above head)
     setTimeout(() => {
-      showBtn('btnCan');
-      showBtn('btnCannot');
-    }, 900);
-  }, 600);
+      const qEl = document.getElementById('questionEl');
+      qEl.innerHTML = `你能允许这个<em>想要</em>离开吗？`;
+      showEl('questionEl');
+      setTimeout(() => {
+        showBtn('btnCan');
+        showBtn('btnCannot');
+      }, 400);
+    }, 700);
+  }, 300);
 }
 
-function showReleasePrompt() {
-  const qEl = document.getElementById('questionEl');
-  qEl.innerHTML = '你能让这个<br><br><br><br>离开吗？';
-  showEl('questionEl');
-}
-
-function spawnDesireOrb() {
-  const orb = document.getElementById('desireOrb');
-  const cls = DESIRE_CLASSES[CURRENT_Q.desire];
-  const label = DESIRE_LABELS[CURRENT_Q.desire];
-
-  orb.className = 'desire-orb';
-  orb.textContent = label;
-  orb.classList.add(cls);
-
-  // start position: at heart
-  const heartPos = getHeartScreenPos();
-  orb.style.left = heartPos.x + 'px';
-  orb.style.top  = heartPos.y + 'px';
-
-  void orb.offsetWidth;
-
-  // animate up to position INSIDE the release prompt
-  // questionEl is at top:16%, with multiple lines for "你能让这个 / [space] / 离开吗？"
-  // orb should sit in the middle of the prompt, around 23% of viewport
-  orb.classList.add('visible');
-  const targetY = window.innerHeight * 0.24;
-  setTimeout(() => {
-    orb.style.top = targetY + 'px';
-  }, 50);
-}
-
-function resetDesireOrb() {
-  const orb = document.getElementById('desireOrb');
-  orb.className = 'desire-orb';
-  orb.style.opacity = '';
-  orb.style.transform = '';
-}
-
-function floatOrbAway() {
-  const orb = document.getElementById('desireOrb');
-  orb.classList.add('float-away');
-}
-
+// ═══════════════════════════════════════════════════════════
+//  RELEASE: 能 / 不能 — both float bubble away
+// ═══════════════════════════════════════════════════════════
 function onCanRelease()    { completeRelease(); }
 function onCannotRelease() { completeRelease(); }
 
@@ -529,14 +624,27 @@ function completeRelease() {
   hideBtn('btnCannot');
   hideEl('questionEl');
   triggerRipple();
-  floatOrbAway();
+
+  // float chosen bubble away (up and out)
+  const chosenKey = CURRENT_Q.desire;
+  const chosen = desireBubbles[chosenKey];
+  if (chosen) {
+    chosen.el.style.transition = 'opacity 1.2s ease-out, transform 1.4s cubic-bezier(0.4, 0, 0.6, 1)';
+    chosen.el.setAttribute('transform', `translate(${HEAD_X},${HEAD_Y - 250})`);
+    setTimeout(() => { chosen.el.style.opacity = '0'; }, 100);
+  }
+
   incrementProgress(CURRENT_Q);
+
   setTimeout(() => {
     QUEUE_INDEX += 1;
     showNextQuestion();
   }, 1500);
 }
 
+// ═══════════════════════════════════════════════════════════
+//  VISUAL EFFECTS
+// ═══════════════════════════════════════════════════════════
 function flashHeart() {
   const h = document.getElementById('svgHeartGlow');
   h.classList.remove('flash');
@@ -570,6 +678,9 @@ function triggerRipple() {
   }
 }
 
+// ═══════════════════════════════════════════════════════════
+//  UI HELPERS
+// ═══════════════════════════════════════════════════════════
 function showEl(id) { document.getElementById(id).classList.add('visible'); }
 function hideEl(id) { document.getElementById(id).classList.remove('visible'); }
 function showBtn(id) { document.getElementById(id).classList.add('visible'); }
@@ -587,7 +698,7 @@ function returnHome() {
   hideBtn('btnNo');
   hideBtn('btnCan');
   hideBtn('btnCannot');
-  resetDesireOrb();
+  clearDesireBubbles();
 }
 
 document.getElementById('btnYes').addEventListener('click', onAnswerYes);
