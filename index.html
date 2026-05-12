@@ -49,10 +49,11 @@ input, select, textarea, button { font-size: 16px; }
 .act-btn:active { transform: translate(-50%, -50%) scale(0.95); }
 .act-btn:hover { background: rgba(240, 225, 250, 0.85); }
 
-#btnYes    { left: 64%; }
-#btnNo     { left: 37%; }
-#btnCan    { left: 64%; }
-#btnCannot { left: 37%; }
+/* both buttons sit tight at heart center (50.8%), offset left/right by half button width + small gap */
+#btnYes    { left: calc(50.8% + 48px); }
+#btnNo     { left: calc(50.8% - 48px); }
+#btnCan    { left: calc(50.8% + 48px); }
+#btnCannot { left: calc(50.8% - 48px); }
 
 /* ─── ripple element ─── */
 .ripple-el {
@@ -465,12 +466,21 @@ function onAnswerYes() {
   hideEl('questionEl');
   PHASE = 'release';
   setTimeout(() => {
+    // show release prompt text
+    showReleasePrompt();
+    // spawn desire orb from heart
     spawnDesireOrb();
     setTimeout(() => {
       showBtn('btnCan');
       showBtn('btnCannot');
     }, 900);
   }, 600);
+}
+
+function showReleasePrompt() {
+  const qEl = document.getElementById('questionEl');
+  qEl.innerHTML = '你能让这个<br><br><br><br>离开吗？';
+  showEl('questionEl');
 }
 
 function spawnDesireOrb() {
@@ -489,9 +499,11 @@ function spawnDesireOrb() {
 
   void orb.offsetWidth;
 
-  // animate up to floating position (above heart)
+  // animate up to position INSIDE the release prompt
+  // questionEl is at top:16%, with multiple lines for "你能让这个 / [space] / 离开吗？"
+  // orb should sit in the middle of the prompt, around 23% of viewport
   orb.classList.add('visible');
-  const targetY = window.innerHeight * 0.32;
+  const targetY = window.innerHeight * 0.24;
   setTimeout(() => {
     orb.style.top = targetY + 'px';
   }, 50);
@@ -515,6 +527,7 @@ function onCannotRelease() { completeRelease(); }
 function completeRelease() {
   hideBtn('btnCan');
   hideBtn('btnCannot');
+  hideEl('questionEl');
   triggerRipple();
   floatOrbAway();
   incrementProgress(CURRENT_Q);
