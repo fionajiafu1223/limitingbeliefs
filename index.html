@@ -48,17 +48,17 @@ input, select, textarea, button { font-size: 16px; }
   opacity: 0; pointer-events: none;
   transition: opacity 0.5s ease, transform 0.2s ease, background 0.2s ease;
   transform: translate(-50%, -50%);
-  top: 59%;
+  top: 65%;
 }
 .act-btn.visible { opacity: 1; pointer-events: auto; }
 .act-btn:active { transform: translate(-50%, -50%) scale(0.95); }
 .act-btn:hover { background: rgba(255, 255, 255, 0.85); }
 
-/* heart is at x=183/360 ≈ 50.8% — buttons sit tight either side */
-#btnYes    { left: calc(50.8% + 48px); }
-#btnNo     { left: calc(50.8% - 48px); }
-#btnCan    { left: calc(50.8% + 56px); }
-#btnCannot { left: calc(50.8% - 56px); }
+/* heart is at x=183/360 ≈ 50.8% — buttons sit at wider gap */
+#btnYes    { left: calc(50.8% + 80px); }
+#btnNo     { left: calc(50.8% - 80px); }
+#btnCan    { left: calc(50.8% + 80px); }
+#btnCannot { left: calc(50.8% - 80px); }
 
 /* ─── ripple ─── */
 .ripple-el {
@@ -201,9 +201,9 @@ input, select, textarea, button { font-size: 16px; }
       <filter id="f3" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="36"/></filter>
       <filter id="fd"  x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="9"/></filter>
       <radialGradient id="heartGradient" cx="50%" cy="50%" r="50%">
-        <stop offset="0%"   stop-color="rgba(110,180,235,1)" stop-opacity="0.9"/>
-        <stop offset="40%"  stop-color="rgba(80,150,220,1)"  stop-opacity="0.35"/>
-        <stop offset="100%" stop-color="rgba(80,150,220,1)"  stop-opacity="0"/>
+        <stop offset="0%"   stop-color="rgba(255,255,255,1)" stop-opacity="0.95"/>
+        <stop offset="40%"  stop-color="rgba(255,255,255,1)" stop-opacity="0.5"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,1)" stop-opacity="0"/>
       </radialGradient>
     </defs>
 
@@ -218,7 +218,7 @@ input, select, textarea, button { font-size: 16px; }
       stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 
     <!-- heart energy glow (chest center) -->
-    <circle id="svgHeartGlow" cx="183" cy="380" r="60"
+    <circle id="svgHeartGlow" cx="183" cy="420" r="60"
       fill="url(#heartGradient)" opacity="0.85"/>
 
     <!-- bubbles layer (desire orbs go here) -->
@@ -267,7 +267,7 @@ const DESIRES = {
 };
 
 // Head target position (where the chosen orb floats up to)
-const HEAD_X = 183, HEAD_Y = 110;
+const HEAD_X = 183, HEAD_Y = 165;
 
 // ═══════════════════════════════════════════════════════════
 //  STATE
@@ -603,7 +603,8 @@ function onAnswerYes() {
     // show release question (above head)
     setTimeout(() => {
       const qEl = document.getElementById('questionEl');
-      qEl.innerHTML = `你能允许这个<em>想要</em>离开吗？`;
+      const desireName = DESIRES[chosenKey].name;
+      qEl.innerHTML = `你能允许这个<em>${desireName}</em>离开吗？`;
       showEl('questionEl');
       setTimeout(() => {
         showBtn('btnCan');
@@ -657,7 +658,7 @@ function getHeartScreenPos() {
   const rect = svg.getBoundingClientRect();
   return {
     x: rect.left + (183 / 360) * rect.width,
-    y: rect.top  + (380 / 640) * rect.height
+    y: rect.top  + (420 / 640) * rect.height
   };
 }
 
