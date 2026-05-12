@@ -10,93 +10,51 @@
 html, body { width: 100%; height: 100%; display: block; overflow: hidden; -webkit-text-size-adjust: 100%; }
 input, select, textarea, button { font-size: 16px; }
 
-/* ─── card / background — soft lavender ─── */
+/* ─── background — soft lavender ─── */
 .card {
   position: relative; z-index: 1;
   width: 100vw; height: 100vh; height: 100dvh;
   background: linear-gradient(170deg, #f7f3fc 0%, #ece1f5 45%, #d8c5ea 100%);
 }
 
-/* ─── intro / page title ─── */
-.app-title {
-  position: absolute; top: 22px; left: 0; right: 0;
-  text-align: center; z-index: 10; pointer-events: none;
-}
-.app-title h1 {
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 13px;
-  letter-spacing: 5px; color: rgba(95, 60, 130, 0.65); font-weight: 400;
-}
-.app-title p {
-  font-size: 8px; letter-spacing: 2.5px;
-  color: rgba(95, 60, 130, 0.32); margin-top: 3px;
-}
-
 /* ─── question text (top area) ─── */
 #questionEl {
   position: absolute; left: 0; right: 0;
-  top: 18%;
+  top: 16%;
   text-align: center;
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 14px; letter-spacing: 1.5px;
-  color: rgba(85, 50, 130, 0.85); line-height: 1.9;
+  font-family: 'ZCOOL XiaoWei', serif; font-size: 15px; letter-spacing: 1.5px;
+  color: rgba(85, 50, 130, 0.88); line-height: 1.9;
   z-index: 30; opacity: 0; pointer-events: none;
   transition: opacity 0.6s ease;
-  padding: 0 32px;
+  padding: 0 36px;
 }
 #questionEl.visible { opacity: 1; }
 
-/* ─── category badge (above question) ─── */
-#categoryBadge {
-  position: absolute; left: 0; right: 0;
-  top: 13%;
-  text-align: center;
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 11px; letter-spacing: 4px;
-  color: rgba(130, 90, 170, 0.6);
-  z-index: 30; opacity: 0;
-  transition: opacity 0.6s ease;
-  pointer-events: none;
-}
-#categoryBadge.visible { opacity: 1; }
-
-/* ─── desire badge (shown during release) ─── */
-#desireBadge {
-  position: absolute; left: 0; right: 0;
-  top: 32%;
-  text-align: center;
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 12px; letter-spacing: 3px;
-  color: rgba(130, 90, 170, 0.85);
-  z-index: 30; opacity: 0;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
-}
-#desireBadge.visible { opacity: 1; }
-
-/* ─── action buttons ─── */
+/* ─── action buttons — placed AT heart, larger ─── */
 .act-btn {
   position: absolute; z-index: 30;
-  padding: 8px 26px; border-radius: 99px;
+  padding: 11px 30px; border-radius: 99px;
   border: 1px solid rgba(160, 120, 200, 0.45);
   background: rgba(255, 252, 255, 0.7); backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 14px;
-  letter-spacing: 2px; color: rgba(95, 55, 145, 0.92);
+  font-family: 'ZCOOL XiaoWei', serif; font-size: 17px;
+  letter-spacing: 3px; color: rgba(95, 55, 145, 0.95);
   cursor: pointer; white-space: nowrap;
   opacity: 0; pointer-events: none;
   transition: opacity 0.5s ease, transform 0.2s ease, background 0.2s ease;
+  transform: translate(-50%, -50%);
+  top: 59%;
 }
 .act-btn.visible { opacity: 1; pointer-events: auto; }
-.act-btn:active { transform: scale(0.96); }
+.act-btn:active { transform: translate(-50%, -50%) scale(0.95); }
 .act-btn:hover { background: rgba(240, 225, 250, 0.85); }
 
-/* Yes button (right of heart) */
-#btnYes { top: 73%; left: 58%; }
-/* No button (left of heart) */
-#btnNo  { top: 73%; right: 58%; }
+#btnYes    { left: 64%; }
+#btnNo     { left: 37%; }
+#btnCan    { left: 64%; }
+#btnCannot { left: 37%; }
 
-/* Release buttons (能 / 不能) */
-#btnCan    { top: 73%; left: 58%; }
-#btnCannot { top: 73%; right: 58%; }
-
-/* ─── ripple element (release feedback) ─── */
+/* ─── ripple element ─── */
 .ripple-el {
   position: absolute; border-radius: 50%; pointer-events: none; z-index: 6;
   background: radial-gradient(circle, rgba(180, 130, 220, 0.55) 0%, rgba(180, 130, 220, 0) 70%);
@@ -108,18 +66,6 @@ input, select, textarea, button { font-size: 16px; }
   100% { transform: translate(-50%,-50%) scale(4.5); opacity: 0; }
 }
 
-/* ─── released toast (✨ 已释放) ─── */
-#releasedToast {
-  position: absolute; left: 0; right: 0;
-  top: 50%; transform: translateY(-50%);
-  text-align: center;
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 16px; letter-spacing: 4px;
-  color: rgba(85, 45, 145, 0.9);
-  z-index: 40; opacity: 0; pointer-events: none;
-  transition: opacity 0.5s ease;
-}
-#releasedToast.visible { opacity: 1; }
-
 /* ─── heart glow animation ─── */
 @keyframes heartPulse {
   0%,100% { opacity: 0.45; r: 56; }
@@ -127,10 +73,9 @@ input, select, textarea, button { font-size: 16px; }
 }
 #svgHeartGlow { animation: heartPulse 3.5s ease-in-out infinite; }
 
-/* heart pulse on "yes" answer */
 @keyframes heartFlash {
   0%   { opacity: 0.45; r: 56; }
-  30%  { opacity: 1;    r: 90; }
+  30%  { opacity: 1;    r: 96; }
   100% { opacity: 0.45; r: 56; }
 }
 #svgHeartGlow.flash { animation: heartFlash 1.2s ease-out 1, heartPulse 3.5s ease-in-out infinite 1.2s; }
@@ -145,7 +90,72 @@ input, select, textarea, button { font-size: 16px; }
 .hg3{animation:hg3 4s ease-in-out infinite 1s;}
 .hcore{animation:hcore 4s ease-in-out infinite;}
 
-/* ─── bottom counter ─── */
+/* ─── desire orb ─── */
+.desire-orb {
+  position: absolute;
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 14px; letter-spacing: 2.5px;
+  white-space: pre-line; text-align: center; line-height: 1.5;
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4);
+  transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), top 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.desire-orb.visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.desire-orb.float-away {
+  opacity: 0;
+  transform: translate(-50%, -150%) scale(0.6);
+  transition: opacity 1.4s ease-out, transform 1.6s cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.desire-orb.d-control {
+  background: radial-gradient(circle at 32% 28%,
+    rgba(255, 220, 200, 0.95) 0%,
+    rgba(255, 204, 160, 0.78) 30%,
+    rgba(192, 80, 48, 0.55) 70%,
+    rgba(122, 32, 16, 0.42) 100%);
+  color: #4a1408;
+  box-shadow:
+    inset 0 0 30px rgba(255, 200, 160, 0.7),
+    0 0 40px rgba(184, 64, 64, 0.45),
+    0 0 80px rgba(184, 64, 64, 0.25);
+  border: 1.5px solid rgba(255, 220, 180, 0.7);
+}
+.desire-orb.d-approval {
+  background: radial-gradient(circle at 32% 28%,
+    rgba(240, 220, 255, 0.95) 0%,
+    rgba(224, 184, 255, 0.78) 30%,
+    rgba(144, 80, 176, 0.55) 70%,
+    rgba(90, 24, 128, 0.42) 100%);
+  color: #2d0848;
+  box-shadow:
+    inset 0 0 30px rgba(230, 195, 255, 0.7),
+    0 0 40px rgba(144, 80, 176, 0.45),
+    0 0 80px rgba(144, 80, 176, 0.25);
+  border: 1.5px solid rgba(230, 200, 255, 0.7);
+}
+.desire-orb.d-safety {
+  background: radial-gradient(circle at 32% 28%,
+    rgba(210, 240, 255, 0.95) 0%,
+    rgba(160, 224, 255, 0.78) 30%,
+    rgba(32, 128, 160, 0.55) 70%,
+    rgba(10, 72, 96, 0.42) 100%);
+  color: #042438;
+  box-shadow:
+    inset 0 0 30px rgba(180, 230, 255, 0.7),
+    0 0 40px rgba(32, 128, 160, 0.45),
+    0 0 80px rgba(32, 128, 160, 0.25);
+  border: 1.5px solid rgba(200, 235, 255, 0.7);
+}
+
+/* ─── bottom bar ─── */
 #bottomBar {
   position: absolute;
   bottom: max(36px, env(safe-area-inset-bottom, 36px));
@@ -154,7 +164,7 @@ input, select, textarea, button { font-size: 16px; }
   white-space: nowrap;
 }
 .bottom-text {
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 11px;
+  font-family: 'ZCOOL XiaoWei', serif; font-size: 12px;
   letter-spacing: 2px; color: rgba(110, 70, 160, 0.55);
 }
 .bottom-btn {
@@ -162,144 +172,67 @@ input, select, textarea, button { font-size: 16px; }
   border: 1px solid rgba(160, 120, 200, 0.3);
   background: rgba(255, 252, 255, 0.5); backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 11px;
-  letter-spacing: 2px; color: rgba(110, 70, 160, 0.7);
+  font-family: 'ZCOOL XiaoWei', serif; font-size: 12px;
+  letter-spacing: 2px; color: rgba(110, 70, 160, 0.75);
   cursor: pointer; transition: background 0.2s ease;
 }
 .bottom-btn:hover { background: rgba(240, 225, 250, 0.75); }
 .bottom-btn:active { transform: scale(0.96); }
 
 /* ═════════════════════════════════════════════════════════
-   HOME PAGE
+   HOME PAGE — floating glass bubbles
    ═════════════════════════════════════════════════════════ */
 .home-page {
   position: absolute; inset: 0; z-index: 50;
   background: linear-gradient(170deg, #f7f3fc 0%, #ece1f5 45%, #d8c5ea 100%);
-  display: flex; flex-direction: column; align-items: center;
-  padding: 60px 32px 40px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
   transition: opacity 0.5s ease;
 }
 .home-page.hidden { opacity: 0; pointer-events: none; }
 
 .home-title {
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 22px;
-  letter-spacing: 6px; color: rgba(85, 50, 130, 0.9);
-  margin-bottom: 8px; text-align: center;
-}
-.home-subtitle {
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 11px;
-  letter-spacing: 2px; color: rgba(110, 70, 160, 0.65);
-  margin-bottom: 36px; text-align: center; line-height: 1.8;
-}
-
-/* large primary button - 随机刷 */
-.btn-random {
-  width: 100%; max-width: 280px;
-  padding: 18px 24px; border-radius: 22px;
-  border: 1px solid rgba(160, 120, 200, 0.4);
-  background: linear-gradient(135deg, rgba(190, 150, 230, 0.55), rgba(160, 110, 210, 0.45));
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 16px;
-  letter-spacing: 4px; color: rgba(70, 35, 120, 0.95);
-  cursor: pointer; margin-bottom: 28px;
-  transition: transform 0.2s ease, background 0.2s ease;
-  box-shadow: 0 4px 16px rgba(160, 110, 210, 0.18);
-}
-.btn-random:active { transform: scale(0.97); }
-.btn-random:hover { background: linear-gradient(135deg, rgba(190, 150, 230, 0.7), rgba(160, 110, 210, 0.6)); }
-
-.section-label {
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 11px;
-  letter-spacing: 4px; color: rgba(110, 70, 160, 0.55);
-  margin-bottom: 16px;
-  display: flex; align-items: center; gap: 10px;
-}
-.section-label::before, .section-label::after {
-  content: ''; width: 28px; height: 1px;
-  background: rgba(160, 120, 200, 0.3);
-}
-
-.cat-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  width: 100%; max-width: 320px;
-  margin-bottom: 36px;
-}
-.btn-cat {
-  padding: 14px 8px; border-radius: 18px;
-  border: 1px solid rgba(160, 120, 200, 0.35);
-  background: rgba(255, 252, 255, 0.55); backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 13px;
-  letter-spacing: 2px; color: rgba(85, 50, 130, 0.9);
-  cursor: pointer;
-  transition: transform 0.2s ease, background 0.2s ease;
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-}
-.btn-cat:active { transform: scale(0.96); }
-.btn-cat:hover { background: rgba(240, 225, 250, 0.85); }
-.btn-cat .cat-icon { font-size: 22px; }
-.btn-cat .cat-name { font-size: 12px; letter-spacing: 2px; }
-
-.stats-box {
-  width: 100%; max-width: 320px;
-  padding: 14px 18px; border-radius: 18px;
-  background: rgba(255, 252, 255, 0.45); backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(160, 120, 200, 0.25);
+  position: absolute; top: 70px; left: 0; right: 0;
   text-align: center;
-  font-family: 'ZCOOL XiaoWei', serif;
-  color: rgba(85, 50, 130, 0.85);
+  font-family: 'ZCOOL XiaoWei', serif; font-size: 22px;
+  letter-spacing: 8px; color: rgba(85, 50, 130, 0.85);
+  z-index: 5; pointer-events: none;
 }
-.stats-row { display: flex; justify-content: space-around; align-items: center; }
-.stats-cell { display: flex; flex-direction: column; gap: 4px; }
-.stats-num { font-size: 22px; color: rgba(70, 35, 120, 1); letter-spacing: 1px; }
-.stats-label { font-size: 10px; letter-spacing: 2px; color: rgba(110, 70, 160, 0.65); }
 
-/* loading state */
-.loading-overlay {
-  position: absolute; inset: 0; z-index: 60;
-  background: rgba(247, 243, 252, 0.95);
+.glass-bubble {
+  position: absolute;
+  border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 13px;
+  font-family: 'ZCOOL XiaoWei', serif;
+  letter-spacing: 2px;
+  color: rgba(70, 35, 120, 0.95);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s ease;
+  transform: translate(-50%, -50%);
+}
+.glass-bubble:active { transform: translate(-50%, -50%) scale(0.94); }
+
+@keyframes bob {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -10px; }
+}
+.glass-bubble.bob {
+  animation: bob var(--bob-dur, 4s) ease-in-out infinite;
+  animation-delay: var(--bob-delay, 0s);
+}
+
+/* loading */
+#loadingOverlay {
+  position: absolute; inset: 0; z-index: 60;
+  background: linear-gradient(170deg, #f7f3fc 0%, #ece1f5 45%, #d8c5ea 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'ZCOOL XiaoWei', serif; font-size: 14px;
   letter-spacing: 3px; color: rgba(95, 60, 130, 0.7);
   transition: opacity 0.4s ease;
 }
-.loading-overlay.hidden { opacity: 0; pointer-events: none; }
-
-/* end of session screen */
-.end-screen {
-  position: absolute; inset: 0; z-index: 55;
-  background: linear-gradient(170deg, #f7f3fc 0%, #ece1f5 45%, #d8c5ea 100%);
-  display: none; flex-direction: column; align-items: center; justify-content: center;
-  gap: 20px; padding: 32px;
-}
-.end-screen.show { display: flex; }
-.end-screen h2 {
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 18px;
-  letter-spacing: 5px; color: rgba(85, 50, 130, 0.9);
-}
-.end-screen p {
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 12px;
-  letter-spacing: 2px; color: rgba(110, 70, 160, 0.65);
-  line-height: 1.8; text-align: center;
-}
-.end-screen .end-num {
-  font-size: 36px; color: rgba(70, 35, 120, 1); letter-spacing: 2px;
-}
-.btn-end {
-  padding: 12px 30px; border-radius: 99px;
-  border: 1px solid rgba(160, 120, 200, 0.5);
-  background: rgba(240, 225, 250, 0.8);
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 13px;
-  letter-spacing: 3px; color: rgba(70, 35, 120, 0.95);
-  cursor: pointer; margin-top: 12px;
-}
-.btn-end:hover { background: rgba(220, 200, 240, 0.9); }
-.btn-end:active { transform: scale(0.96); }
+#loadingOverlay.hidden { opacity: 0; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -307,40 +240,12 @@ input, select, textarea, button { font-size: 16px; }
 <!-- ═══════════════ HOME PAGE ═══════════════ -->
 <div class="home-page" id="homePage">
   <div class="home-title">限制性信念释放</div>
-  <div class="home-subtitle">让 AI 帮你看见<br>那些限制你的信念</div>
-
-  <button class="btn-random" onclick="startSession('all')">🎲 随机刷</button>
-
-  <div class="section-label">选领域刷</div>
-
-  <div class="cat-grid" id="catGrid">
-    <!-- populated by JS -->
-  </div>
-
-  <div class="stats-box">
-    <div class="stats-row">
-      <div class="stats-cell">
-        <div class="stats-num" id="statsToday">0</div>
-        <div class="stats-label">今日已释放</div>
-      </div>
-      <div class="stats-cell">
-        <div class="stats-num" id="statsTotal">0</div>
-        <div class="stats-label">累计已释放</div>
-      </div>
-    </div>
-  </div>
+  <div id="bubblesContainer"></div>
 </div>
 
 <!-- ═══════════════ CARD / RELEASE PAGE ═══════════════ -->
 <div class="card" id="card">
-  <div class="app-title">
-    <h1>限制性信念释放</h1>
-    <p>觉察 · 允许 · 释放</p>
-  </div>
-
-  <div id="categoryBadge"></div>
   <div id="questionEl"></div>
-  <div id="desireBadge"></div>
 
   <svg id="sv" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:5;pointer-events:none;" viewBox="0 0 360 640">
     <defs>
@@ -354,7 +259,6 @@ input, select, textarea, button { font-size: 16px; }
       </radialGradient>
     </defs>
 
-    <!-- Human figure — soft lavender glow -->
     <path class="hg1" d="M330 580 C330 490 320 410 312 372 C303 333 272 323 247 318 C222 313 210 303 210 276 C210 261 210 248 219 239 C241 213 232 143 183 143 C134 143 125 213 147 239 C156 248 156 261 156 276 C156 303 144 313 119 318 C94 323 63 333 54 372 C45 411 36 490 36 580"
       stroke="#c8a8eb" stroke-width="80" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#f3)"/>
     <path class="hg2" d="M330 580 C330 490 320 410 312 372 C303 333 272 323 247 318 C222 313 210 303 210 276 C210 261 210 248 219 239 C241 213 232 143 183 143 C134 143 125 213 147 239 C156 248 156 261 156 276 C156 303 144 313 119 318 C94 323 63 333 54 372 C45 411 36 490 36 580"
@@ -364,21 +268,16 @@ input, select, textarea, button { font-size: 16px; }
     <path class="hcore" d="M330 580 C330 490 320 410 312 372 C303 333 272 323 247 318 C222 313 210 303 210 276 C210 261 210 248 219 239 C241 213 232 143 183 143 C134 143 125 213 147 239 C156 248 156 261 156 276 C156 303 144 313 119 318 C94 323 63 333 54 372 C45 411 36 490 36 580"
       stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 
-    <!-- Heart glow at chest center (x=183, y=380) — slightly above true heart position for better visual centering -->
     <circle id="svgHeartGlow" cx="183" cy="380" r="60"
       fill="url(#heartGradient)" opacity="0.85"/>
   </svg>
 
-  <!-- Phase 1: 是 / 否 buttons -->
+  <div id="desireOrb" class="desire-orb"></div>
+
   <button class="act-btn" id="btnYes">是</button>
   <button class="act-btn" id="btnNo">否</button>
-
-  <!-- Phase 2: 能 / 不能 buttons (shown after "是") -->
   <button class="act-btn" id="btnCan">能</button>
   <button class="act-btn" id="btnCannot">不能</button>
-
-  <!-- Released feedback toast -->
-  <div id="releasedToast"></div>
 
   <div id="bottomBar">
     <button class="bottom-btn" id="backBtn">← 返回</button>
@@ -386,33 +285,16 @@ input, select, textarea, button { font-size: 16px; }
   </div>
 </div>
 
-<!-- End of session screen -->
-<div class="end-screen" id="endScreen">
-  <h2>✨ 这一轮完成了</h2>
-  <p>你今天承认并看见了</p>
-  <div class="end-num" id="endNum">0</div>
-  <p>个限制性信念</p>
-  <button class="btn-end" onclick="returnHome()">回首页</button>
-  <button class="btn-end" onclick="restartSession()">再来一轮</button>
-</div>
-
-<!-- Loading -->
-<div class="loading-overlay" id="loadingOverlay">加载中…</div>
+<div id="loadingOverlay">加载中…</div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════════════════
-let BELIEFS = null;            // loaded from beliefs.json
-let CURRENT_QUEUE = [];        // current shuffled queue of questions
+let BELIEFS = null;
+let CURRENT_QUEUE = [];
 let QUEUE_INDEX = 0;
-let CURRENT_Q = null;          // current question object
-let PHASE = 'question';        // 'question' | 'release'
-let CURRENT_CATEGORY = 'all';  // 'all' or category id
+let CURRENT_Q = null;
+let PHASE = 'question';
+let CURRENT_CATEGORY = 'all';
 
-// ═══════════════════════════════════════════════════════════
-//  STORAGE
-// ═══════════════════════════════════════════════════════════
 const STORAGE_KEY = 'lb_progress_v1';
 
 function loadProgress() {
@@ -420,7 +302,6 @@ function loadProgress() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return defaultProgress();
     const p = JSON.parse(raw);
-    // reset today counter if it's a new day
     const today = new Date().toDateString();
     if (p.todayDate !== today) {
       p.todayCount = 0;
@@ -430,13 +311,7 @@ function loadProgress() {
   } catch(e) { return defaultProgress(); }
 }
 function defaultProgress() {
-  return {
-    total: 0,
-    todayCount: 0,
-    todayDate: new Date().toDateString(),
-    byCategory: {},   // { money: 3, relations: 2, ... }
-    byDesire: {}      // { control: 5, approval: 8, safety: 1 }
-  };
+  return { total: 0, todayCount: 0, todayDate: new Date().toDateString(), byCategory: {}, byDesire: {} };
 }
 function saveProgress(p) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); } catch(e){}
@@ -452,18 +327,17 @@ function incrementProgress(question) {
   updateCounter();
 }
 
-// ═══════════════════════════════════════════════════════════
-//  DESIRE LABELS
-// ═══════════════════════════════════════════════════════════
 const DESIRE_LABELS = {
-  control: '想要控制',
-  approval: '想要被认同',
-  safety: '想要安全'
+  control:  '想要\n控制',
+  approval: '想要被\n认同',
+  safety:   '想要\n安全'
+};
+const DESIRE_CLASSES = {
+  control:  'd-control',
+  approval: 'd-approval',
+  safety:   'd-safety'
 };
 
-// ═══════════════════════════════════════════════════════════
-//  LOAD BELIEFS
-// ═══════════════════════════════════════════════════════════
 async function loadBeliefs() {
   try {
     const res = await fetch('beliefs.json');
@@ -478,47 +352,66 @@ async function loadBeliefs() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  HOME PAGE
-// ═══════════════════════════════════════════════════════════
 function initHomePage() {
-  const grid = document.getElementById('catGrid');
-  grid.innerHTML = '';
-  const cats = BELIEFS.categories;
-  Object.keys(cats).forEach(catId => {
-    const c = cats[catId];
-    const btn = document.createElement('button');
-    btn.className = 'btn-cat';
-    btn.onclick = () => startSession(catId);
-    btn.innerHTML = '<span class="cat-icon">' + c.icon + '</span><span class="cat-name">' + c.name + '</span>';
-    grid.appendChild(btn);
+  const container = document.getElementById('bubblesContainer');
+  container.innerHTML = '';
+
+  const SIZE_RAND = 130;
+  const SIZE_CAT  = 100;
+
+  const bubbles = [
+    { id: 'all',       label: '随机',     size: SIZE_RAND, x: 50, y: 40, dur: 4.0, delay: 0.0 },
+    { id: 'money',     label: '金钱',     size: SIZE_CAT,  x: 22, y: 22, dur: 4.5, delay: 0.4 },
+    { id: 'relations', label: '关系',     size: SIZE_CAT,  x: 78, y: 22, dur: 3.8, delay: 0.9 },
+    { id: 'career',    label: '事业',     size: SIZE_CAT,  x: 18, y: 58, dur: 4.2, delay: 0.2 },
+    { id: 'health',    label: '健康',     size: SIZE_CAT,  x: 82, y: 58, dur: 3.6, delay: 1.1 },
+    { id: 'self',      label: '自我价值', size: SIZE_CAT,  x: 32, y: 80, dur: 4.7, delay: 0.7 },
+    { id: 'family',    label: '原生家庭', size: SIZE_CAT,  x: 68, y: 80, dur: 4.1, delay: 0.3 }
+  ];
+
+  bubbles.forEach(b => {
+    const el = document.createElement('div');
+    el.className = 'glass-bubble bob';
+    el.style.left = b.x + '%';
+    el.style.top  = b.y + '%';
+    el.style.width  = b.size + 'px';
+    el.style.height = b.size + 'px';
+    el.style.fontSize = (b.size >= 120 ? 18 : 14) + 'px';
+    el.style.setProperty('--bob-dur', b.dur + 's');
+    el.style.setProperty('--bob-delay', b.delay + 's');
+    el.textContent = b.label;
+    applyGlassBubbleStyle(el);
+    el.onclick = () => startSession(b.id);
+    container.appendChild(el);
   });
-  updateHomeStats();
-}
-function updateHomeStats() {
-  const p = loadProgress();
-  document.getElementById('statsToday').textContent = p.todayCount;
-  document.getElementById('statsTotal').textContent = p.total;
 }
 
-// ═══════════════════════════════════════════════════════════
-//  SESSION CONTROL
-// ═══════════════════════════════════════════════════════════
+function applyGlassBubbleStyle(el) {
+  el.style.background = [
+    'radial-gradient(circle at 32% 28%,',
+    '  rgba(255,255,255,0.75) 0%,',
+    '  rgba(245,235,255,0.45) 22%,',
+    '  rgba(190,150,230,0.30) 50%,',
+    '  rgba(170,120,210,0.22) 75%,',
+    '  rgba(150,100,200,0.10) 100%)'
+  ].join('');
+  el.style.boxShadow = [
+    'inset 0 0 35px rgba(190,150,230,0.55)',
+    'inset 0 0 14px rgba(170,120,210,0.45)',
+    '0 4px 22px rgba(170,120,210,0.55)',
+    '0 0 32px rgba(190,150,230,0.30)'
+  ].join(', ');
+  el.style.border = 'none';
+}
+
 function startSession(categoryId) {
   CURRENT_CATEGORY = categoryId;
-  // filter questions
-  let pool;
-  if (categoryId === 'all') {
-    pool = BELIEFS.questions.slice();
-  } else {
-    pool = BELIEFS.questions.filter(q => q.category === categoryId);
-  }
-  // shuffle
+  let pool = (categoryId === 'all')
+    ? BELIEFS.questions.slice()
+    : BELIEFS.questions.filter(q => q.category === categoryId);
   CURRENT_QUEUE = shuffle(pool);
   QUEUE_INDEX = 0;
-  // hide home, show card
   document.getElementById('homePage').classList.add('hidden');
-  document.getElementById('endScreen').classList.remove('show');
   updateCounter();
   showNextQuestion();
 }
@@ -533,27 +426,20 @@ function shuffle(arr) {
 }
 
 function showNextQuestion() {
+  // infinite loop
   if (QUEUE_INDEX >= CURRENT_QUEUE.length) {
-    showEndScreen();
-    return;
+    CURRENT_QUEUE = shuffle(CURRENT_QUEUE);
+    QUEUE_INDEX = 0;
   }
   CURRENT_Q = CURRENT_QUEUE[QUEUE_INDEX];
   PHASE = 'question';
-  // reset UI
-  hideEl('desireBadge');
-  hideEl('releasedToast');
   hideBtn('btnCan');
   hideBtn('btnCannot');
-  // set category badge
-  const cat = BELIEFS.categories[CURRENT_Q.category];
-  const catEl = document.getElementById('categoryBadge');
-  catEl.textContent = cat.icon + ' ' + cat.name;
-  // set question text
+  resetDesireOrb();
+
   const qEl = document.getElementById('questionEl');
   qEl.textContent = CURRENT_Q.question;
-  // fade in
   setTimeout(() => {
-    showEl('categoryBadge');
     showEl('questionEl');
     setTimeout(() => {
       showBtn('btnYes');
@@ -562,103 +448,107 @@ function showNextQuestion() {
   }, 100);
 }
 
-// ═══════════════════════════════════════════════════════════
-//  ANSWER: 否 (no)
-// ═══════════════════════════════════════════════════════════
 function onAnswerNo() {
   hideBtn('btnYes');
   hideBtn('btnNo');
   hideEl('questionEl');
-  hideEl('categoryBadge');
   setTimeout(() => {
     QUEUE_INDEX += 1;
     showNextQuestion();
   }, 500);
 }
 
-// ═══════════════════════════════════════════════════════════
-//  ANSWER: 是 (yes) → release phase
-// ═══════════════════════════════════════════════════════════
 function onAnswerYes() {
-  // heart pulse
   flashHeart();
   hideBtn('btnYes');
   hideBtn('btnNo');
   hideEl('questionEl');
-  hideEl('categoryBadge');
   PHASE = 'release';
-  // change question to release prompt
   setTimeout(() => {
-    const desireText = DESIRE_LABELS[CURRENT_Q.desire];
-    document.getElementById('questionEl').innerHTML
-      = '你能让这个 <span style="color:rgba(70,35,120,1);">' + desireText + '</span> 离开吗？';
-    document.getElementById('desireBadge').textContent = '— ' + desireText + ' —';
-    showEl('questionEl');
-    showEl('desireBadge');
+    spawnDesireOrb();
     setTimeout(() => {
       showBtn('btnCan');
       showBtn('btnCannot');
-    }, 400);
+    }, 900);
   }, 600);
 }
 
-// ═══════════════════════════════════════════════════════════
-//  RELEASE: 能 / 不能 — both trigger release + ripple
-// ═══════════════════════════════════════════════════════════
-function onCanRelease() {
-  completeRelease('✨ 已释放');
-}
-function onCannotRelease() {
-  completeRelease('🌊 看见它就好');
-}
-function completeRelease(toastMsg) {
-  hideBtn('btnCan');
-  hideBtn('btnCannot');
-  hideEl('questionEl');
-  hideEl('desireBadge');
-  triggerRipple();
-  // show toast
-  const toast = document.getElementById('releasedToast');
-  toast.textContent = toastMsg;
-  showEl('releasedToast');
-  // record progress
-  incrementProgress(CURRENT_Q);
-  // next question
+function spawnDesireOrb() {
+  const orb = document.getElementById('desireOrb');
+  const cls = DESIRE_CLASSES[CURRENT_Q.desire];
+  const label = DESIRE_LABELS[CURRENT_Q.desire];
+
+  orb.className = 'desire-orb';
+  orb.textContent = label;
+  orb.classList.add(cls);
+
+  // start position: at heart
+  const heartPos = getHeartScreenPos();
+  orb.style.left = heartPos.x + 'px';
+  orb.style.top  = heartPos.y + 'px';
+
+  void orb.offsetWidth;
+
+  // animate up to floating position (above heart)
+  orb.classList.add('visible');
+  const targetY = window.innerHeight * 0.32;
   setTimeout(() => {
-    hideEl('releasedToast');
-    setTimeout(() => {
-      QUEUE_INDEX += 1;
-      showNextQuestion();
-    }, 400);
-  }, 1400);
+    orb.style.top = targetY + 'px';
+  }, 50);
 }
 
-// ═══════════════════════════════════════════════════════════
-//  VISUAL EFFECTS
-// ═══════════════════════════════════════════════════════════
+function resetDesireOrb() {
+  const orb = document.getElementById('desireOrb');
+  orb.className = 'desire-orb';
+  orb.style.opacity = '';
+  orb.style.transform = '';
+}
+
+function floatOrbAway() {
+  const orb = document.getElementById('desireOrb');
+  orb.classList.add('float-away');
+}
+
+function onCanRelease()    { completeRelease(); }
+function onCannotRelease() { completeRelease(); }
+
+function completeRelease() {
+  hideBtn('btnCan');
+  hideBtn('btnCannot');
+  triggerRipple();
+  floatOrbAway();
+  incrementProgress(CURRENT_Q);
+  setTimeout(() => {
+    QUEUE_INDEX += 1;
+    showNextQuestion();
+  }, 1500);
+}
+
 function flashHeart() {
   const h = document.getElementById('svgHeartGlow');
   h.classList.remove('flash');
-  // force reflow
   void h.offsetWidth;
   h.classList.add('flash');
 }
 
-function triggerRipple() {
-  const card = document.getElementById('card');
-  // get heart screen position
+function getHeartScreenPos() {
   const svg = document.getElementById('sv');
   const rect = svg.getBoundingClientRect();
-  // heart is at SVG coord (183, 380), viewBox is 360x640
-  const x = rect.left + (183 / 360) * rect.width;
-  const y = rect.top  + (380 / 640) * rect.height;
-  // create 2 ripples slightly offset for richer effect
+  return {
+    x: rect.left + (183 / 360) * rect.width,
+    y: rect.top  + (380 / 640) * rect.height
+  };
+}
+
+function triggerRipple() {
+  const card = document.getElementById('card');
+  const p = getHeartScreenPos();
   for (let i = 0; i < 2; i++) {
     setTimeout(() => {
       const r = document.createElement('div');
       r.className = 'ripple-el';
-      r.style.left = x + 'px';
-      r.style.top  = y + 'px';
+      r.style.left = p.x + 'px';
+      r.style.top  = p.y + 'px';
       r.style.width = '120px';
       r.style.height = '120px';
       card.appendChild(r);
@@ -667,9 +557,6 @@ function triggerRipple() {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-//  UI HELPERS
-// ═══════════════════════════════════════════════════════════
 function showEl(id) { document.getElementById(id).classList.add('visible'); }
 function hideEl(id) { document.getElementById(id).classList.remove('visible'); }
 function showBtn(id) { document.getElementById(id).classList.add('visible'); }
@@ -680,44 +567,22 @@ function updateCounter() {
   document.getElementById('counterText').textContent = '今日 ' + p.todayCount;
 }
 
-// ═══════════════════════════════════════════════════════════
-//  END / NAVIGATION
-// ═══════════════════════════════════════════════════════════
-function showEndScreen() {
-  const p = loadProgress();
-  document.getElementById('endNum').textContent = p.todayCount;
-  document.getElementById('endScreen').classList.add('show');
-}
 function returnHome() {
-  document.getElementById('endScreen').classList.remove('show');
   document.getElementById('homePage').classList.remove('hidden');
   hideEl('questionEl');
-  hideEl('categoryBadge');
-  hideEl('desireBadge');
-  hideEl('releasedToast');
   hideBtn('btnYes');
   hideBtn('btnNo');
   hideBtn('btnCan');
   hideBtn('btnCannot');
-  updateHomeStats();
-}
-function restartSession() {
-  document.getElementById('endScreen').classList.remove('show');
-  startSession(CURRENT_CATEGORY);
+  resetDesireOrb();
 }
 
-// ═══════════════════════════════════════════════════════════
-//  BIND EVENTS
-// ═══════════════════════════════════════════════════════════
 document.getElementById('btnYes').addEventListener('click', onAnswerYes);
 document.getElementById('btnNo').addEventListener('click', onAnswerNo);
 document.getElementById('btnCan').addEventListener('click', onCanRelease);
 document.getElementById('btnCannot').addEventListener('click', onCannotRelease);
 document.getElementById('backBtn').addEventListener('click', returnHome);
 
-// ═══════════════════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════════════════
 loadBeliefs();
 </script>
 </body>
