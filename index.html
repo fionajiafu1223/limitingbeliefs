@@ -34,7 +34,7 @@ input, select, textarea, button { font-size: 16px; }
 /* ─── question text ─── */
 #questionEl {
   position: absolute; left: 0; right: 0;
-  top: 19%;
+  top: 13%;
   text-align: center;
   font-family: 'ZCOOL XiaoWei', serif; font-size: 15px; letter-spacing: 1.5px;
   color: rgba(20, 60, 100, 0.92); line-height: 1.9;
@@ -87,19 +87,37 @@ input, select, textarea, button { font-size: 16px; }
 }
 
 /* ─── heart glow ─── */
+/* heart in normal state — breathes softly */
 @keyframes heartPulse {
   0%,100% { opacity: 0.45; r: 56; }
   50%     { opacity: 0.85; r: 70; }
 }
 #svgHeartGlow { animation: heartPulse 3.5s ease-in-out infinite; }
 
+/* heart "condensed" state — after user answers "是" — bigger, more solid */
+@keyframes heartCondensed {
+  0%,100% { opacity: 0.85; r: 78; }
+  50%     { opacity: 1;    r: 92; }
+}
+#svgHeartGlow.condensed { animation: heartCondensed 2.4s ease-in-out infinite; }
+
+/* strong heartbeat — happens at key moments */
 @keyframes heartBoom {
   0%   { opacity: 0.45; r: 60; }
   18%  { opacity: 1;    r: 140; }
   50%  { opacity: 0.7;  r: 90; }
+  100% { opacity: 0.85; r: 78; }
+}
+#svgHeartGlow.boom { animation: heartBoom 1.6s cubic-bezier(0.16, 1, 0.3, 1) 1; }
+
+/* release boom — final release, energy dissipates */
+@keyframes heartRelease {
+  0%   { opacity: 0.95; r: 80; }
+  20%  { opacity: 1;    r: 160; }
+  60%  { opacity: 0.5;  r: 100; }
   100% { opacity: 0.45; r: 60; }
 }
-#svgHeartGlow.boom { animation: heartBoom 1.6s cubic-bezier(0.16, 1, 0.3, 1) 1, heartPulse 3.5s ease-in-out infinite 1.6s; }
+#svgHeartGlow.release { animation: heartRelease 1.8s cubic-bezier(0.16, 1, 0.3, 1) 1, heartPulse 3.5s ease-in-out infinite 1.8s; }
 
 /* ─── human figure (white glow, like Whole_process) ─── */
 @keyframes hg1{0%,100%{opacity:0.10}50%{opacity:0.28}}
@@ -244,6 +262,25 @@ input, select, textarea, button { font-size: 16px; }
         <stop offset="0%"   stop-color="rgba(255,255,255,1)" stop-opacity="0.95"/>
         <stop offset="40%"  stop-color="rgba(255,255,255,1)" stop-opacity="0.5"/>
         <stop offset="100%" stop-color="rgba(255,255,255,1)" stop-opacity="0"/>
+      </radialGradient>
+      <!-- desire-themed energy gradients (used after "yes") -->
+      <radialGradient id="heartGradient_control" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#ffe0c0"   stop-opacity="1"/>
+        <stop offset="35%"  stop-color="#ff8050"   stop-opacity="0.85"/>
+        <stop offset="75%"  stop-color="#c04030"   stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#7a2010"   stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="heartGradient_approval" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#f0d8ff"   stop-opacity="1"/>
+        <stop offset="35%"  stop-color="#c890e8"   stop-opacity="0.85"/>
+        <stop offset="75%"  stop-color="#9050b0"   stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#5a1880"   stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="heartGradient_safety" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#d0f0ff"   stop-opacity="1"/>
+        <stop offset="35%"  stop-color="#60c0e8"   stop-opacity="0.85"/>
+        <stop offset="75%"  stop-color="#2080a0"   stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#0a4860"   stop-opacity="0"/>
       </radialGradient>
     </defs>
 
@@ -494,6 +531,8 @@ function onAnswerNo() {
   hideBtn('btnYes');
   hideBtn('btnNo');
   hideEl('questionEl');
+  setHeartNormal();
+  resetHeartColor();
   setTimeout(() => {
     QUEUE_INDEX += 1;
     showNextQuestion();
@@ -504,13 +543,21 @@ function onAnswerNo() {
 //  ANSWER: 是 → release phase
 // ═══════════════════════════════════════════════════════════
 function onAnswerYes() {
-  boomHeart();
   hideBtn('btnYes');
   hideBtn('btnNo');
   hideEl('questionEl');
   PHASE = 'release';
 
-  // show release question (above head)
+  // 1. boom the heart
+  boomHeart();
+
+  // 2. transition the heart to "condensed" colored state mid-boom
+  setTimeout(() => {
+    setHeartColor(CURRENT_Q.desire);
+    setHeartCondensed();
+  }, 700);
+
+  // 3. show release question (above head)
   setTimeout(() => {
     const qEl = document.getElementById('questionEl');
     const desireName = DESIRES[CURRENT_Q.desire].name;
@@ -520,7 +567,36 @@ function onAnswerYes() {
       showBtn('btnCan');
       showBtn('btnCannot');
     }, 400);
-  }, 900);
+  }, 1100);
+}
+
+function setHeartColor(desireKey) {
+  const h = document.getElementById('svgHeartGlow');
+  const map = {
+    control:  'heartGradient_control',
+    approval: 'heartGradient_approval',
+    safety:   'heartGradient_safety'
+  };
+  h.setAttribute('fill', `url(#${map[desireKey]})`);
+}
+
+function resetHeartColor() {
+  const h = document.getElementById('svgHeartGlow');
+  h.setAttribute('fill', 'url(#heartGradient)');
+}
+
+function setHeartCondensed() {
+  const h = document.getElementById('svgHeartGlow');
+  h.classList.remove('boom');
+  h.classList.remove('release');
+  h.classList.add('condensed');
+}
+
+function setHeartNormal() {
+  const h = document.getElementById('svgHeartGlow');
+  h.classList.remove('condensed');
+  h.classList.remove('boom');
+  h.classList.remove('release');
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -533,15 +609,32 @@ function completeRelease() {
   hideBtn('btnCan');
   hideBtn('btnCannot');
   hideEl('questionEl');
-  boomHeart();
+
+  // release animation
+  releaseHeart();
   triggerRipple();
 
   incrementProgress(CURRENT_Q);
 
+  // after release, reset color back to white for next question
+  setTimeout(() => {
+    resetHeartColor();
+    setHeartNormal();
+  }, 1800);
+
   setTimeout(() => {
     QUEUE_INDEX += 1;
     showNextQuestion();
-  }, 1500);
+  }, 1800);
+}
+
+function releaseHeart() {
+  const h = document.getElementById('svgHeartGlow');
+  h.classList.remove('condensed');
+  h.classList.remove('boom');
+  h.classList.remove('release');
+  void h.offsetWidth;
+  h.classList.add('release');
 }
 
 // ═══════════════════════════════════════════════════════════
