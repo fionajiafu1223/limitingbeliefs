@@ -345,16 +345,15 @@ function initHomePage() {
 
   // each bubble has its own glow color — matching the FREED ecosystem palette
   const bubbles = [
-    // top row: random (large, centered)
-    { id: 'all',       label: '随机',     glow: 'rgba(255,255,255,0.55)',   size: SIZE_RAND, x: 50, y: 22, dur: 4.0, delay: 0.0 },
-    // middle row: 3 categories
-    { id: 'money',     label: '金钱',     glow: 'rgba(225,195,80,0.55)',    size: SIZE_CAT,  x: 22, y: 48, dur: 4.5, delay: 0.4 },
-    { id: 'relations', label: '关系',     glow: 'rgba(255,130,155,0.55)',   size: SIZE_CAT,  x: 50, y: 48, dur: 3.8, delay: 0.9 },
-    { id: 'career',    label: '事业',     glow: 'rgba(60,110,200,0.55)',    size: SIZE_CAT,  x: 78, y: 48, dur: 4.2, delay: 0.2 },
-    // bottom row: 3 categories
-    { id: 'health',    label: '健康',     glow: 'rgba(40,190,140,0.55)',    size: SIZE_CAT,  x: 22, y: 75, dur: 3.6, delay: 1.1 },
-    { id: 'self',      label: '自我价值', glow: 'rgba(190,140,255,0.50)',   size: SIZE_CAT,  x: 50, y: 75, dur: 4.7, delay: 0.7 },
-    { id: 'family',    label: '原生家庭', glow: 'rgba(165,115,75,0.55)',    size: SIZE_CAT,  x: 78, y: 75, dur: 4.1, delay: 0.3 }
+    // top: random (large, centered)
+    { id: 'all',       label: '随机',     glow: 'rgba(255,255,255,0.55)',   size: SIZE_RAND, x: 50, y: 18, dur: 4.0, delay: 0.0 },
+    // 2 columns × 3 rows
+    { id: 'money',     label: '金钱',     glow: 'rgba(225,195,80,0.55)',    size: SIZE_CAT,  x: 32, y: 44, dur: 4.5, delay: 0.4 },
+    { id: 'relations', label: '关系',     glow: 'rgba(255,130,155,0.55)',   size: SIZE_CAT,  x: 68, y: 44, dur: 3.8, delay: 0.9 },
+    { id: 'career',    label: '事业',     glow: 'rgba(60,110,200,0.55)',    size: SIZE_CAT,  x: 32, y: 64, dur: 4.2, delay: 0.2 },
+    { id: 'health',    label: '健康',     glow: 'rgba(40,190,140,0.55)',    size: SIZE_CAT,  x: 68, y: 64, dur: 3.6, delay: 1.1 },
+    { id: 'self',      label: '自我价值', glow: 'rgba(190,140,255,0.50)',   size: SIZE_CAT,  x: 32, y: 84, dur: 4.7, delay: 0.7 },
+    { id: 'family',    label: '原生家庭', glow: 'rgba(165,115,75,0.55)',    size: SIZE_CAT,  x: 68, y: 84, dur: 4.1, delay: 0.3 }
   ];
 
   bubbles.forEach(b => {
