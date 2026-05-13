@@ -93,12 +93,13 @@ input, select, textarea, button { font-size: 16px; }
 }
 #svgHeartGlow { animation: heartPulse 3.5s ease-in-out infinite; }
 
-@keyframes heartFlash {
-  0%   { opacity: 0.45; r: 56; }
-  30%  { opacity: 1;    r: 96; }
-  100% { opacity: 0.45; r: 56; }
+@keyframes heartBoom {
+  0%   { opacity: 0.45; r: 60; }
+  18%  { opacity: 1;    r: 140; }
+  50%  { opacity: 0.7;  r: 90; }
+  100% { opacity: 0.45; r: 60; }
 }
-#svgHeartGlow.flash { animation: heartFlash 1.2s ease-out 1, heartPulse 3.5s ease-in-out infinite 1.2s; }
+#svgHeartGlow.boom { animation: heartBoom 1.6s cubic-bezier(0.16, 1, 0.3, 1) 1, heartPulse 3.5s ease-in-out infinite 1.6s; }
 
 /* ─── human figure (white glow, like Whole_process) ─── */
 @keyframes hg1{0%,100%{opacity:0.10}50%{opacity:0.28}}
@@ -259,9 +260,6 @@ input, select, textarea, button { font-size: 16px; }
     <!-- heart energy glow (chest center) -->
     <circle id="svgHeartGlow" cx="183" cy="420" r="60"
       fill="url(#heartGradient)" opacity="0.85"/>
-
-    <!-- bubbles layer (desire orbs go here) -->
-    <g id="bubblesLayer"></g>
   </svg>
 
   <button class="act-btn" id="btnYes">是</button>
@@ -317,8 +315,6 @@ let QUEUE_INDEX = 0;
 let CURRENT_Q = null;
 let PHASE = 'question'; // 'question' | 'release'
 let CURRENT_CATEGORY = 'all';
-let desireBubbles = {}; // { control: el, approval: el, safety: el }
-let gradientCounter = 0;
 
 // ═══════════════════════════════════════════════════════════
 //  STORAGE
@@ -476,12 +472,6 @@ function showNextQuestion() {
   hideBtn('btnCan');
   hideBtn('btnCannot');
 
-  // clear any leftover desire bubbles
-  clearDesireBubbles();
-
-  // spawn all 3 desire bubbles in the body with staggered fade-in
-  spawnAllDesires();
-
   // show question text
   const qEl = document.getElementById('questionEl');
   qEl.textContent = CURRENT_Q.question;
@@ -495,117 +485,7 @@ function showNextQuestion() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  DESIRE BUBBLES (SVG, matching Whole_process style)
-// ═══════════════════════════════════════════════════════════
-function spawnAllDesires() {
-  ['control', 'approval', 'safety'].forEach((key, i) => {
-    setTimeout(() => {
-      spawnDesireBubble(key);
-    }, i * 280);
-  });
-}
-
-function spawnDesireBubble(key) {
-  const d = DESIRES[key];
-  const layer = document.getElementById('bubblesLayer');
-  const defs = document.getElementById('svgDefs');
-
-  // gradient
-  const gid = 'grad_' + (gradientCounter++);
-  const rg = document.createElementNS(NS, 'radialGradient');
-  rg.setAttribute('id', gid);
-  rg.setAttribute('cx','38%'); rg.setAttribute('cy','32%'); rg.setAttribute('r','65%');
-  const stops = [
-    [d.s[0], 0.95, '0%'],
-    [d.s[1], 0.78, '55%'],
-    [d.s[2], 0.68, '100%']
-  ];
-  stops.forEach(([c, op, off]) => {
-    const st = document.createElementNS(NS,'stop');
-    st.setAttribute('offset', off);
-    st.setAttribute('stop-color', c);
-    st.setAttribute('stop-opacity', op);
-    rg.appendChild(st);
-  });
-  defs.appendChild(rg);
-
-  const g = document.createElementNS(NS, 'g');
-  g.setAttribute('transform', `translate(${d.bodyPos.x},${d.bodyPos.y})`);
-  g.style.opacity = '0';
-  g.style.transition = 'opacity 0.8s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1)';
-
-  // pulsing ring
-  const ring = document.createElementNS(NS, 'circle');
-  ring.setAttribute('r', 44);
-  ring.setAttribute('fill', 'none');
-  ring.setAttribute('stroke', d.stroke);
-  ring.setAttribute('stroke-width', '1.2');
-  ring.setAttribute('stroke-opacity', '0.5');
-  ring.classList.add('desire-ring');
-
-  // outer glow
-  const glC = document.createElementNS(NS, 'circle');
-  glC.setAttribute('r', 46);
-  glC.setAttribute('fill', d.glow);
-  glC.setAttribute('filter', 'url(#fd)');
-  glC.style.opacity = '0.35';
-
-  // body
-  const bod = document.createElementNS(NS, 'circle');
-  bod.setAttribute('r', 40);
-  bod.setAttribute('fill', `url(#${gid})`);
-
-  // rim
-  const rim = document.createElementNS(NS, 'circle');
-  rim.setAttribute('r', 40);
-  rim.setAttribute('fill', 'none');
-  rim.setAttribute('stroke', d.stroke);
-  rim.setAttribute('stroke-width', '1.4');
-  rim.setAttribute('stroke-opacity', '0.9');
-
-  // sparkle dots
-  [-10, 10].forEach(dx => {
-    const dot = document.createElementNS(NS, 'circle');
-    dot.setAttribute('r', '2');
-    dot.setAttribute('cx', dx);
-    dot.setAttribute('cy', '-8');
-    dot.setAttribute('fill', 'white');
-    dot.setAttribute('fill-opacity', '0.35');
-    g.appendChild(dot);
-  });
-
-  // highlight
-  const h1 = document.createElementNS(NS, 'ellipse');
-  h1.setAttribute('rx', '12');
-  h1.setAttribute('ry', '6');
-  h1.setAttribute('fill', 'white');
-  h1.setAttribute('fill-opacity', '0.28');
-  h1.setAttribute('transform', 'translate(-10,-13)');
-
-  // label
-  const tx = document.createElementNS(NS, 'text');
-  tx.setAttribute('text-anchor', 'middle');
-  tx.setAttribute('dy', '0.35em');
-  tx.setAttribute('font-size', '9');
-  tx.setAttribute('font-family', "'Noto Serif SC',serif");
-  tx.setAttribute('fill', 'white');
-  tx.setAttribute('fill-opacity', '0.92');
-  tx.textContent = d.name;
-
-  [ring, glC, bod, rim, h1, tx].forEach(el => g.appendChild(el));
-  layer.appendChild(g);
-
-  // fade in
-  requestAnimationFrame(() => { g.style.opacity = '1'; });
-
-  desireBubbles[key] = { el: g, gid, key };
-}
-
-function clearDesireBubbles() {
-  const layer = document.getElementById('bubblesLayer');
-  layer.innerHTML = '';
-  desireBubbles = {};
-}
+//  (desire bubbles removed — replaced by intense heart pulse "boom")
 
 // ═══════════════════════════════════════════════════════════
 //  ANSWER: 否
@@ -614,58 +494,33 @@ function onAnswerNo() {
   hideBtn('btnYes');
   hideBtn('btnNo');
   hideEl('questionEl');
-  // fade out all desire bubbles
-  fadeOutAllDesires();
   setTimeout(() => {
     QUEUE_INDEX += 1;
     showNextQuestion();
-  }, 600);
-}
-
-function fadeOutAllDesires() {
-  Object.values(desireBubbles).forEach(b => {
-    b.el.style.opacity = '0';
-  });
+  }, 500);
 }
 
 // ═══════════════════════════════════════════════════════════
 //  ANSWER: 是 → release phase
 // ═══════════════════════════════════════════════════════════
 function onAnswerYes() {
-  flashHeart();
+  boomHeart();
   hideBtn('btnYes');
   hideBtn('btnNo');
   hideEl('questionEl');
   PHASE = 'release';
 
-  const chosenKey = CURRENT_Q.desire;
-
-  // fade out the two non-chosen bubbles
-  Object.keys(desireBubbles).forEach(key => {
-    if (key !== chosenKey) {
-      desireBubbles[key].el.style.opacity = '0';
-    }
-  });
-
-  // float chosen bubble up to head
+  // show release question (above head)
   setTimeout(() => {
-    const chosen = desireBubbles[chosenKey];
-    if (chosen) {
-      chosen.el.setAttribute('transform', `translate(${HEAD_X},${HEAD_Y})`);
-    }
-
-    // show release question (above head)
+    const qEl = document.getElementById('questionEl');
+    const desireName = DESIRES[CURRENT_Q.desire].name;
+    qEl.innerHTML = `你能允许这种<em>${desireName}</em>离开吗？`;
+    showEl('questionEl');
     setTimeout(() => {
-      const qEl = document.getElementById('questionEl');
-      const desireName = DESIRES[chosenKey].name;
-      qEl.innerHTML = `你能允许这个<em>${desireName}</em>离开吗？`;
-      showEl('questionEl');
-      setTimeout(() => {
-        showBtn('btnCan');
-        showBtn('btnCannot');
-      }, 400);
-    }, 700);
-  }, 300);
+      showBtn('btnCan');
+      showBtn('btnCannot');
+    }, 400);
+  }, 900);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -678,16 +533,8 @@ function completeRelease() {
   hideBtn('btnCan');
   hideBtn('btnCannot');
   hideEl('questionEl');
+  boomHeart();
   triggerRipple();
-
-  // float chosen bubble away (up and out)
-  const chosenKey = CURRENT_Q.desire;
-  const chosen = desireBubbles[chosenKey];
-  if (chosen) {
-    chosen.el.style.transition = 'opacity 1.2s ease-out, transform 1.4s cubic-bezier(0.4, 0, 0.6, 1)';
-    chosen.el.setAttribute('transform', `translate(${HEAD_X},${HEAD_Y - 250})`);
-    setTimeout(() => { chosen.el.style.opacity = '0'; }, 100);
-  }
 
   incrementProgress(CURRENT_Q);
 
@@ -700,11 +547,11 @@ function completeRelease() {
 // ═══════════════════════════════════════════════════════════
 //  VISUAL EFFECTS
 // ═══════════════════════════════════════════════════════════
-function flashHeart() {
+function boomHeart() {
   const h = document.getElementById('svgHeartGlow');
-  h.classList.remove('flash');
+  h.classList.remove('boom');
   void h.offsetWidth;
-  h.classList.add('flash');
+  h.classList.add('boom');
 }
 
 function getHeartScreenPos() {
@@ -760,7 +607,6 @@ function returnHome() {
   hideBtn('btnNo');
   hideBtn('btnCan');
   hideBtn('btnCannot');
-  clearDesireBubbles();
 }
 
 document.getElementById('btnYes').addEventListener('click', onAnswerYes);
