@@ -54,11 +54,11 @@ input, select, textarea, button { font-size: 16px; }
 .act-btn:active { transform: translate(-50%, -50%) scale(0.95); }
 .act-btn:hover { background: rgba(255, 255, 255, 0.85); }
 
-/* heart is at x=183/360 ≈ 50.8% — buttons sit at wider gap */
-#btnYes    { left: calc(50.8% + 80px); }
-#btnNo     { left: calc(50.8% - 80px); }
-#btnCan    { left: calc(50.8% + 80px); }
-#btnCannot { left: calc(50.8% - 80px); }
+/* heart is at x=183/360 ≈ 50.8% — buttons sit at moderate gap */
+#btnYes    { left: calc(50.8% + 60px); }
+#btnNo     { left: calc(50.8% - 60px); }
+#btnCan    { left: calc(50.8% + 60px); }
+#btnCannot { left: calc(50.8% - 60px); }
 
 /* ─── ripple ─── */
 .ripple-el {
@@ -267,7 +267,7 @@ const DESIRES = {
 };
 
 // Head target position (where the chosen orb floats up to)
-const HEAD_X = 183, HEAD_Y = 165;
+const HEAD_X = 183, HEAD_Y = 205;
 
 // ═══════════════════════════════════════════════════════════
 //  STATE
