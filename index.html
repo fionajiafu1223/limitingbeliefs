@@ -17,10 +17,24 @@ input, select, textarea, button { font-size: 16px; }
   background: linear-gradient(170deg, #cff4ff 0%, #bae6fd 45%, #90d8f5 100%);
 }
 
+/* ─── inner page header ─── */
+.app-title {
+  position: absolute; top: 28px; left: 0; right: 0;
+  text-align: center; z-index: 10; pointer-events: none;
+}
+.app-title h1 {
+  font-family: 'ZCOOL XiaoWei', serif; font-size: 14px;
+  letter-spacing: 5px; color: rgba(15, 60, 110, 0.75); font-weight: 400;
+}
+.app-title p {
+  font-size: 9px; letter-spacing: 3px;
+  color: rgba(15, 60, 110, 0.45); margin-top: 4px;
+}
+
 /* ─── question text ─── */
 #questionEl {
   position: absolute; left: 0; right: 0;
-  top: 13%;
+  top: 19%;
   text-align: center;
   font-family: 'ZCOOL XiaoWei', serif; font-size: 15px; letter-spacing: 1.5px;
   color: rgba(20, 60, 100, 0.92); line-height: 1.9;
@@ -139,11 +153,27 @@ input, select, textarea, button { font-size: 16px; }
 .home-page.hidden { opacity: 0; pointer-events: none; }
 
 .home-title {
-  position: absolute; top: 70px; left: 0; right: 0;
+  position: absolute; top: 56px; left: 0; right: 0;
   text-align: center;
   font-family: 'ZCOOL XiaoWei', serif; font-size: 22px;
   letter-spacing: 8px; color: rgba(15, 60, 110, 0.9);
   z-index: 5; pointer-events: none;
+}
+.home-stats {
+  position: absolute;
+  bottom: max(36px, env(safe-area-inset-bottom, 36px));
+  left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 18px;
+  z-index: 5; pointer-events: none;
+  font-family: 'ZCOOL XiaoWei', serif;
+  color: rgba(15, 60, 110, 0.7);
+}
+.stat-cell { display: flex; align-items: baseline; gap: 6px; }
+.stat-num  { font-size: 18px; color: rgba(15, 60, 110, 0.95); letter-spacing: 1px; }
+.stat-label{ font-size: 11px; letter-spacing: 3px; color: rgba(15, 60, 110, 0.55); }
+.stat-divider {
+  width: 1px; height: 14px;
+  background: rgba(15, 60, 110, 0.25);
 }
 
 .glass-bubble {
@@ -188,10 +218,19 @@ input, select, textarea, button { font-size: 16px; }
 <div class="home-page" id="homePage">
   <div class="home-title">限制性信念释放</div>
   <div id="bubblesContainer"></div>
+  <div class="home-stats" id="homeStats">
+    <span class="stat-cell"><span class="stat-num" id="homeStatToday">0</span><span class="stat-label">今日</span></span>
+    <span class="stat-divider"></span>
+    <span class="stat-cell"><span class="stat-num" id="homeStatTotal">0</span><span class="stat-label">累计</span></span>
+  </div>
 </div>
 
 <!-- ═══════════════ CARD / RELEASE PAGE ═══════════════ -->
 <div class="card" id="card">
+  <div class="app-title">
+    <h1>限制性信念释放</h1>
+    <p>觉察 · 允许 · 释放</p>
+  </div>
   <div id="questionEl"></div>
 
   <svg id="sv" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:5;pointer-events:none;" viewBox="0 0 360 640">
@@ -339,6 +378,7 @@ async function loadBeliefs() {
 function initHomePage() {
   const container = document.getElementById('bubblesContainer');
   container.innerHTML = '';
+  updateHomeStats();
 
   const SIZE_RAND = 130;
   const SIZE_CAT  = 100;
@@ -346,7 +386,7 @@ function initHomePage() {
   // each bubble has its own glow color — matching the FREED ecosystem palette
   const bubbles = [
     // top: random (large, centered)
-    { id: 'all',       label: '随机',     glow: 'rgba(255,255,255,0.55)',   size: SIZE_RAND, x: 50, y: 18, dur: 4.0, delay: 0.0 },
+    { id: 'all',       label: '随机',     glow: 'rgba(255,255,255,0.55)',   size: SIZE_RAND, x: 50, y: 24, dur: 4.0, delay: 0.0 },
     // 2 columns × 3 rows
     { id: 'money',     label: '金钱',     glow: 'rgba(225,195,80,0.55)',    size: SIZE_CAT,  x: 32, y: 44, dur: 4.5, delay: 0.4 },
     { id: 'relations', label: '关系',     glow: 'rgba(255,130,155,0.55)',   size: SIZE_CAT,  x: 68, y: 44, dur: 3.8, delay: 0.9 },
@@ -706,8 +746,15 @@ function updateCounter() {
   document.getElementById('counterText').textContent = '今日 ' + p.todayCount;
 }
 
+function updateHomeStats() {
+  const p = loadProgress();
+  document.getElementById('homeStatToday').textContent = p.todayCount;
+  document.getElementById('homeStatTotal').textContent = p.total;
+}
+
 function returnHome() {
   document.getElementById('homePage').classList.remove('hidden');
+  updateHomeStats();
   hideEl('questionEl');
   hideBtn('btnYes');
   hideBtn('btnNo');
