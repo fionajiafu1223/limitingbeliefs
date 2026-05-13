@@ -343,14 +343,18 @@ function initHomePage() {
   const SIZE_RAND = 130;
   const SIZE_CAT  = 100;
 
+  // each bubble has its own glow color — matching the FREED ecosystem palette
   const bubbles = [
-    { id: 'all',       label: '随机',     size: SIZE_RAND, x: 50, y: 40, dur: 4.0, delay: 0.0 },
-    { id: 'money',     label: '金钱',     size: SIZE_CAT,  x: 22, y: 22, dur: 4.5, delay: 0.4 },
-    { id: 'relations', label: '关系',     size: SIZE_CAT,  x: 78, y: 22, dur: 3.8, delay: 0.9 },
-    { id: 'career',    label: '事业',     size: SIZE_CAT,  x: 18, y: 58, dur: 4.2, delay: 0.2 },
-    { id: 'health',    label: '健康',     size: SIZE_CAT,  x: 82, y: 58, dur: 3.6, delay: 1.1 },
-    { id: 'self',      label: '自我价值', size: SIZE_CAT,  x: 32, y: 80, dur: 4.7, delay: 0.7 },
-    { id: 'family',    label: '原生家庭', size: SIZE_CAT,  x: 68, y: 80, dur: 4.1, delay: 0.3 }
+    // top row: random (large, centered)
+    { id: 'all',       label: '随机',     glow: 'rgba(255,255,255,0.55)',   size: SIZE_RAND, x: 50, y: 22, dur: 4.0, delay: 0.0 },
+    // middle row: 3 categories
+    { id: 'money',     label: '金钱',     glow: 'rgba(225,195,80,0.55)',    size: SIZE_CAT,  x: 22, y: 48, dur: 4.5, delay: 0.4 },
+    { id: 'relations', label: '关系',     glow: 'rgba(255,130,155,0.55)',   size: SIZE_CAT,  x: 50, y: 48, dur: 3.8, delay: 0.9 },
+    { id: 'career',    label: '事业',     glow: 'rgba(60,110,200,0.55)',    size: SIZE_CAT,  x: 78, y: 48, dur: 4.2, delay: 0.2 },
+    // bottom row: 3 categories
+    { id: 'health',    label: '健康',     glow: 'rgba(40,190,140,0.55)',    size: SIZE_CAT,  x: 22, y: 75, dur: 3.6, delay: 1.1 },
+    { id: 'self',      label: '自我价值', glow: 'rgba(190,140,255,0.50)',   size: SIZE_CAT,  x: 50, y: 75, dur: 4.7, delay: 0.7 },
+    { id: 'family',    label: '原生家庭', glow: 'rgba(165,115,75,0.55)',    size: SIZE_CAT,  x: 78, y: 75, dur: 4.1, delay: 0.3 }
   ];
 
   bubbles.forEach(b => {
@@ -364,26 +368,37 @@ function initHomePage() {
     el.style.setProperty('--bob-dur', b.dur + 's');
     el.style.setProperty('--bob-delay', b.delay + 's');
     el.textContent = b.label;
-    applyGlassBubbleStyle(el);
+    applyGlassBubbleStyle(el, b.glow);
     el.onclick = () => startSession(b.id);
     container.appendChild(el);
   });
 }
 
-function applyGlassBubbleStyle(el) {
+function applyGlassBubbleStyle(el, glow) {
+  // base alpha used in glow rgba (we replace it to derive different intensities)
+  // same pattern as index.html setNavBubbleColors()
+  const baseAlpha = '0.55';
+  const a30 = glow.replace(baseAlpha, '0.30');
+  const a22 = glow.replace(baseAlpha, '0.22');
+  const a10 = glow.replace(baseAlpha, '0.10');
+  const a75 = glow.replace(baseAlpha, '0.75');
+  const a65 = glow.replace(baseAlpha, '0.65');
+  const a80 = glow.replace(baseAlpha, '0.80');
+  const a45 = glow.replace(baseAlpha, '0.45');
+
   el.style.background = [
     'radial-gradient(circle at 32% 28%,',
-    '  rgba(255,255,255,0.8) 0%,',
-    '  rgba(220,240,255,0.5) 22%,',
-    '  rgba(140,200,240,0.32) 50%,',
-    '  rgba(100,170,220,0.22) 75%,',
-    '  rgba(80,150,210,0.10) 100%)'
+    '  rgba(255,255,255,0.78) 0%,',
+    '  rgba(245,245,250,0.45) 22%,',
+    '  ' + a30 + ' 50%,',
+    '  ' + a22 + ' 75%,',
+    '  ' + a10 + ' 100%)'
   ].join('');
   el.style.boxShadow = [
-    'inset 0 0 35px rgba(140,200,240,0.6)',
-    'inset 0 0 14px rgba(100,170,220,0.5)',
-    '0 4px 22px rgba(100,170,220,0.55)',
-    '0 0 32px rgba(140,200,240,0.32)'
+    'inset 0 0 35px ' + a75,
+    'inset 0 0 14px ' + a65,
+    '0 4px 22px ' + a80,
+    '0 0 32px ' + a45
   ].join(', ');
   el.style.border = 'none';
 }
