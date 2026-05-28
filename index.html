@@ -180,32 +180,67 @@ input, select, textarea, button { font-size: 16px; }
   letter-spacing: 2px; color: rgba(3,105,161,0.55);
 }
 
-/* ─── category selector dropdown (top-right, matching ecBtn position) ─── */
-.category-selector {
-  position: fixed;
-  top: max(22px, calc(env(safe-area-inset-top, 0px) + 8px));
-  right: calc(env(safe-area-inset-right, 0px) + 56px);
+/* ─── category selector (custom dropdown) ─── */
+.category-trigger {
+  position: absolute;
+  top: max(56px, calc(env(safe-area-inset-top, 0px) + 44px));
+  left: 50%; transform: translateX(-50%);
   z-index: 100;
-  padding: 6px 14px;
+  padding: 6px 26px 6px 14px;
   border-radius: 99px;
   border: 1px solid rgba(255,255,255,0.85);
-  background: rgba(255,255,255,0.45);
+  background: rgba(255,255,255,0.28);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   font-family: 'ZCOOL XiaoWei', serif;
   font-size: 12px; letter-spacing: 2px;
   color: rgba(3,105,161,0.80);
   cursor: pointer;
-  appearance: none; -webkit-appearance: none;
   box-shadow: 0 2px 10px rgba(3,80,140,0.10);
   /* dropdown arrow */
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%230369a1' stroke-width='1.4' fill='none' stroke-linecap='round'/></svg>");
   background-repeat: no-repeat;
   background-position: right 10px center;
-  padding-right: 26px;
-  outline: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
   transition: background 0.2s;
 }
-.category-selector:hover { background-color: rgba(255,255,255,0.68); }
+.category-trigger:hover { background-color: rgba(255,255,255,0.45); }
+
+.category-menu {
+  position: absolute;
+  top: calc(max(56px, calc(env(safe-area-inset-top, 0px) + 44px)) + 36px);
+  left: 50%; transform: translateX(-50%);
+  z-index: 101;
+  min-width: 130px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.85);
+  background: linear-gradient(158deg, rgba(222,246,255,0.92) 0%, rgba(186,230,253,0.88) 100%);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 10px 30px rgba(3,80,140,0.18), 0 1px 0 rgba(255,255,255,0.7) inset;
+  padding: 6px 0;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  transform: translateX(-50%) translateY(-6px);
+}
+.category-menu.open {
+  opacity: 1; pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.category-item {
+  padding: 10px 28px;
+  font-family: 'ZCOOL XiaoWei', serif;
+  font-size: 13px; letter-spacing: 3px;
+  color: rgba(3,105,161,0.85);
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.category-item:hover { background: rgba(255,255,255,0.45); }
+.category-item.selected {
+  background: rgba(255,255,255,0.35);
+  color: rgba(3,105,161,1);
+}
 
 #loadingOverlay {
   position: absolute; inset: 0; z-index: 60;
@@ -226,9 +261,8 @@ input, select, textarea, button { font-size: 16px; }
     <h1>限制性信念释放</h1>
     <p>觉察 · 允许 · 释放</p>
   </div>
-  <select class="category-selector" id="categorySelector">
-    <!-- populated by JS -->
-  </select>
+  <div class="category-trigger" id="categoryTrigger">随机</div>
+  <div class="category-menu" id="categoryMenu"></div>
   <div id="questionEl"></div>
 
   <svg class="svg-canvas" id="sv" viewBox="0 0 360 640">
@@ -388,27 +422,49 @@ async function loadBeliefs() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  CATEGORY SELECTOR (top dropdown)
+//  CATEGORY SELECTOR (custom dropdown)
 // ═══════════════════════════════════════════════════════════
 function initCategorySelector() {
-  const sel = document.getElementById('categorySelector');
-  sel.innerHTML = '';
-  // "random" option (default)
-  const randOpt = document.createElement('option');
-  randOpt.value = 'all';
-  randOpt.textContent = '随机';
-  sel.appendChild(randOpt);
-  // category options
-  const cats = BELIEFS.categories;
-  Object.keys(cats).forEach(catId => {
-    const opt = document.createElement('option');
-    opt.value = catId;
-    opt.textContent = cats[catId].name;
-    sel.appendChild(opt);
+  const trigger = document.getElementById('categoryTrigger');
+  const menu = document.getElementById('categoryMenu');
+  menu.innerHTML = '';
+
+  const items = [
+    { id: 'all', label: '随机' },
+    ...Object.keys(BELIEFS.categories).map(catId => ({
+      id: catId,
+      label: BELIEFS.categories[catId].name
+    }))
+  ];
+
+  let currentId = 'all';
+
+  function buildMenu() {
+    menu.innerHTML = '';
+    items.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'category-item' + (item.id === currentId ? ' selected' : '');
+      el.textContent = item.label;
+      el.onclick = (e) => {
+        e.stopPropagation();
+        currentId = item.id;
+        trigger.textContent = item.label;
+        menu.classList.remove('open');
+        buildMenu();
+        startSession(item.id);
+      };
+      menu.appendChild(el);
+    });
+  }
+  buildMenu();
+
+  trigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    menu.classList.toggle('open');
   });
-  sel.value = 'all';
-  sel.addEventListener('change', (e) => {
-    startSession(e.target.value);
+  // close menu when clicking elsewhere
+  document.addEventListener('click', () => {
+    menu.classList.remove('open');
   });
 }
 
@@ -554,6 +610,13 @@ function spawnDesireOrb(key) {
   g.style.opacity = '0';
   g.style.transition = 'opacity 0.8s ease, transform 1.1s cubic-bezier(0.22, 1, 0.36, 1)';
 
+  // outer glow (blurred halo around the orb)
+  const glow = document.createElementNS(NS, 'circle');
+  glow.setAttribute('r', 38);
+  glow.setAttribute('fill', d.glow);
+  glow.setAttribute('filter', 'url(#fd)');
+  glow.setAttribute('fill-opacity', '0.45');
+
   // body
   const bod = document.createElementNS(NS, 'circle');
   bod.setAttribute('r', 32);
@@ -585,7 +648,7 @@ function spawnDesireOrb(key) {
   tx.setAttribute('fill-opacity', '0.92');
   tx.textContent = d.name;
 
-  [bod, rim, h1, tx].forEach(el => g.appendChild(el));
+  [glow, bod, rim, h1, tx].forEach(el => g.appendChild(el));
   layer.appendChild(g);
 
   // fade in
