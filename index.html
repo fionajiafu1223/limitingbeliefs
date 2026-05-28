@@ -179,6 +179,10 @@ input, select, textarea, button { font-size: 16px; }
   font-family: 'ZCOOL XiaoWei', serif; font-size: 11px;
   letter-spacing: 2px; color: rgba(3,105,161,0.55);
 }
+.bottom-divider {
+  width: 1px; height: 11px;
+  background: rgba(3,105,161,0.25);
+}
 
 /* ─── category selector (custom dropdown) ─── */
 .category-trigger {
@@ -322,6 +326,8 @@ input, select, textarea, button { font-size: 16px; }
 
   <div id="bottomBar">
     <span class="bottom-text" id="counterText">今日 0</span>
+    <span class="bottom-divider"></span>
+    <span class="bottom-text" id="totalText">累计 0</span>
   </div>
 </div>
 
@@ -761,6 +767,7 @@ function hideBtn(id) { document.getElementById(id).classList.remove('visible'); 
 function updateCounter() {
   const p = loadProgress();
   document.getElementById('counterText').textContent = '今日 ' + p.todayCount;
+  document.getElementById('totalText').textContent = '累计 ' + p.total;
 }
 
 document.getElementById('btnYes').addEventListener('click', onAnswerYes);
