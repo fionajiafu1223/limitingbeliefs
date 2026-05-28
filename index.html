@@ -7,24 +7,48 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { width: 100%; height: 100%; display: block; overflow: hidden; -webkit-text-size-adjust: 100%; background:#bae6fd; }
+html, body {
+  width: 100%; height: 100%;
+  background: #bae6fd;
+  display: block;
+  overflow: hidden;
+}
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(186,230,253,0.6) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(147,217,248,0.5) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
 input, select, textarea, button { font-size: 16px; }
 
-/* ─── background — soft sky blue (same as Whole_process) ─── */
+/* ─── background ─── */
 .card {
   position: relative; z-index: 1;
-  width: 100vw; height: 100vh; height: 100dvh;
+  width: 100vw; height: 100vh;
   background: linear-gradient(170deg, #cff4ff 0%, #bae6fd 45%, #90d8f5 100%);
 }
 
-/* ─── inner page header ─── */
+/* ─── App title ─── */
 .app-title {
-  position: absolute; top: 22px; left: 0; right: 0;
+  position: absolute; top: max(22px, calc(env(safe-area-inset-top, 0px) + 8px)); left: 0; right: 0;
   text-align: center; z-index: 10; pointer-events: none;
 }
 .app-title h1 {
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 18px;
-  letter-spacing: 6px; color: rgba(15, 60, 110, 0.88); font-weight: 400;
+  font-family: 'ZCOOL XiaoWei', serif; font-size: 13px;
+  letter-spacing: 5px; color: rgba(3,105,161,0.55); font-weight: 400;
+}
+.app-title p {
+  font-size: 8px; letter-spacing: 2.5px;
+  color: rgba(3,105,161,0.32); margin-top: 3px;
+}
+
+/* ─── SVG canvas (body silhouette layer) ─── */
+.svg-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  overflow: visible;
+  z-index: 5;
+  pointer-events: none;
 }
 
 /* ─── question text ─── */
@@ -32,43 +56,43 @@ input, select, textarea, button { font-size: 16px; }
   position: absolute; left: 0; right: 0;
   top: 17%;
   text-align: center;
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 15px; letter-spacing: 1.5px;
-  color: rgba(20, 60, 100, 0.92); line-height: 1.9;
+  font-family: 'ZCOOL XiaoWei', serif; font-size: 13px; letter-spacing: 2px;
+  color: rgba(3,105,161,0.75); line-height: 1.9;
   z-index: 30; opacity: 0; pointer-events: none;
-  transition: opacity 0.6s ease;
+  transition: opacity 1.5s ease;
   padding: 0 36px;
 }
 #questionEl.visible { opacity: 1; }
 #questionEl em {
   font-style: normal;
-  color: rgba(0, 60, 110, 1);
-  font-weight: 600;
+  color: rgba(3,105,161,0.95);
+  font-size: 15px;
 }
 
-/* ─── action buttons — at heart, tight pair ─── */
+/* ─── action buttons ─── */
 .act-btn {
   position: absolute; z-index: 30;
-  padding: 11px 30px; border-radius: 99px;
-  border: 1px solid rgba(70, 130, 180, 0.45);
-  background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(12px);
+  padding: 7px 18px; border-radius: 99px;
+  border: 1px solid rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.45); backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 17px;
-  letter-spacing: 3px; color: rgba(20, 70, 120, 0.95);
+  font-family: 'ZCOOL XiaoWei', serif; font-size: 13px;
+  letter-spacing: 2px; color: rgba(3,105,161,0.85);
   cursor: pointer; white-space: nowrap;
   opacity: 0; pointer-events: none;
-  transition: opacity 0.5s ease, transform 0.2s ease, background 0.2s ease;
+  transition: opacity 1.5s ease, transform 0.2s ease, background 0.2s ease;
   transform: translate(-50%, -50%);
   top: 65%;
 }
 .act-btn.visible { opacity: 1; pointer-events: auto; }
 .act-btn:active { transform: translate(-50%, -50%) scale(0.95); }
-.act-btn:hover { background: rgba(255, 255, 255, 0.85); }
+.act-btn:hover { background: rgba(255,255,255,0.68); }
 
 /* heart is at x=183/360 ≈ 50.8% — buttons sit at moderate gap */
-#btnYes    { left: calc(50.8% + 60px); }
-#btnNo     { left: calc(50.8% - 60px); }
-#btnCan    { left: calc(50.8% + 60px); }
-#btnCannot { left: calc(50.8% - 60px); }
+#btnYes    { left: calc(50.8% + 56px); }
+#btnNo     { left: calc(50.8% - 56px); }
+#btnCan    { left: calc(50.8% + 56px); }
+#btnCannot { left: calc(50.8% - 56px); }
 
 /* ─── ripple ─── */
 .ripple-el {
@@ -83,14 +107,12 @@ input, select, textarea, button { font-size: 16px; }
 }
 
 /* ─── heart glow ─── */
-/* heart in normal state — breathes softly */
 @keyframes heartPulse {
   0%,100% { opacity: 0.45; r: 56; }
   50%     { opacity: 0.85; r: 70; }
 }
 #svgHeartGlow { animation: heartPulse 3.5s ease-in-out infinite; }
 
-/* strong heartbeat — happens at key moments */
 @keyframes heartBoom {
   0%   { opacity: 0.45; r: 60; }
   18%  { opacity: 1;    r: 140; }
@@ -99,81 +121,74 @@ input, select, textarea, button { font-size: 16px; }
 }
 #svgHeartGlow.boom { animation: heartBoom 1.6s cubic-bezier(0.16, 1, 0.3, 1) 1, heartPulse 3.5s ease-in-out infinite 1.6s; }
 
-/* ─── human figure (white glow, like Whole_process) ─── */
-@keyframes hg1{0%,100%{opacity:0.10}50%{opacity:0.28}}
-@keyframes hg2{0%,100%{opacity:0.22}50%{opacity:0.55}}
-@keyframes hg3{0%,100%{opacity:0.42}50%{opacity:0.92}}
+/* ─── body glow animations (matching Emotions.html) ─── */
+@keyframes hg1{0%,100%{opacity:0.08}50%{opacity:0.28}}
+@keyframes hg2{0%,100%{opacity:0.18}50%{opacity:0.6}}
+@keyframes hg3{0%,100%{opacity:0.45}50%{opacity:1}}
 @keyframes hcore{0%,100%{opacity:0.55}50%{opacity:1}}
 .hg1{animation:hg1 6s ease-in-out infinite;}
 .hg2{animation:hg2 5s ease-in-out infinite 0.5s;}
 .hg3{animation:hg3 4s ease-in-out infinite 1s;}
 .hcore{animation:hcore 4s ease-in-out infinite;}
 
-/* ─── desire bubble pulsing ring ─── */
-@keyframes desireRingPulse {
-  0%,100% { r: 44; stroke-opacity: 0.5; }
-  50%     { r: 50; stroke-opacity: 0.2; }
+/* ─── caption (bottom) ─── */
+.caption {
+  position: absolute; bottom: 16px; left: 0; right: 0;
+  text-align: center; z-index: 10; pointer-events: none;
 }
-.desire-ring { animation: desireRingPulse 3s ease-in-out infinite; }
+.caption p {
+  font-size: 7.5px; letter-spacing: 2.5px;
+  color: rgba(3,105,161,0.32);
+  font-family: 'ZCOOL XiaoWei', serif;
+}
 
-/* ─── bottom bar ─── */
+/* ─── bottom counter ─── */
 #bottomBar {
   position: absolute;
   bottom: max(36px, env(safe-area-inset-bottom, 36px));
   left: 50%; transform: translateX(-50%);
   z-index: 30; display: flex; align-items: center; gap: 14px;
   white-space: nowrap;
+  pointer-events: none;
 }
 .bottom-text {
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 12px;
-  letter-spacing: 2px; color: rgba(20, 70, 120, 0.6);
+  font-family: 'ZCOOL XiaoWei', serif; font-size: 11px;
+  letter-spacing: 2px; color: rgba(3,105,161,0.55);
 }
-.bottom-btn {
-  padding: 7px 16px; border-radius: 99px;
-  border: 1px solid rgba(70, 130, 180, 0.3);
-  background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 12px;
-  letter-spacing: 2px; color: rgba(20, 70, 120, 0.75);
-  cursor: pointer; transition: background 0.2s ease;
-}
-.bottom-btn:hover { background: rgba(255, 255, 255, 0.75); }
-.bottom-btn:active { transform: scale(0.96); }
 
-/* ═════════════════════════════════════════════════════════
-   HOME PAGE — floating glass bubbles (sky blue theme)
-   ═════════════════════════════════════════════════════════ */
-/* ─── category selector dropdown ─── */
+/* ─── category selector dropdown (top-right, matching ecBtn position) ─── */
 .category-selector {
-  position: absolute;
-  top: 60px;
-  left: 50%; transform: translateX(-50%);
-  z-index: 35;
-  padding: 7px 16px 7px 18px;
+  position: fixed;
+  top: max(22px, calc(env(safe-area-inset-top, 0px) + 8px));
+  right: calc(env(safe-area-inset-right, 0px) + 56px);
+  z-index: 100;
+  padding: 6px 14px;
   border-radius: 99px;
-  border: 1px solid rgba(70, 130, 180, 0.3);
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.45);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   font-family: 'ZCOOL XiaoWei', serif;
-  font-size: 13px; letter-spacing: 2px;
-  color: rgba(20, 70, 120, 0.85);
+  font-size: 12px; letter-spacing: 2px;
+  color: rgba(3,105,161,0.80);
   cursor: pointer;
   appearance: none; -webkit-appearance: none;
+  box-shadow: 0 2px 10px rgba(3,80,140,0.10);
   /* dropdown arrow */
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23467090' stroke-width='1.4' fill='none' stroke-linecap='round'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%230369a1' stroke-width='1.4' fill='none' stroke-linecap='round'/></svg>");
   background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 32px;
+  background-position: right 10px center;
+  padding-right: 26px;
   outline: none;
+  transition: background 0.2s;
 }
-.category-selector:focus { background-color: rgba(255, 255, 255, 0.75); }
+.category-selector:hover { background-color: rgba(255,255,255,0.68); }
 
 #loadingOverlay {
   position: absolute; inset: 0; z-index: 60;
   background: linear-gradient(170deg, #cff4ff 0%, #bae6fd 45%, #90d8f5 100%);
   display: flex; align-items: center; justify-content: center;
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 14px;
-  letter-spacing: 3px; color: rgba(15, 60, 110, 0.7);
+  font-family: 'ZCOOL XiaoWei', serif; font-size: 13px;
+  letter-spacing: 3px; color: rgba(3,105,161,0.7);
   transition: opacity 0.4s ease;
 }
 #loadingOverlay.hidden { opacity: 0; pointer-events: none; }
@@ -185,13 +200,14 @@ input, select, textarea, button { font-size: 16px; }
 <div class="card" id="card">
   <div class="app-title">
     <h1>限制性信念释放</h1>
+    <p>觉察 · 允许 · 释放</p>
   </div>
   <select class="category-selector" id="categorySelector">
     <!-- populated by JS -->
   </select>
   <div id="questionEl"></div>
 
-  <svg id="sv" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:5;pointer-events:none;" viewBox="0 0 360 640">
+  <svg class="svg-canvas" id="sv" viewBox="0 0 360 640">
     <defs id="svgDefs">
       <filter id="f1" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="10"/></filter>
       <filter id="f2" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="20"/></filter>
