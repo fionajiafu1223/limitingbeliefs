@@ -19,22 +19,18 @@ input, select, textarea, button { font-size: 16px; }
 
 /* ─── inner page header ─── */
 .app-title {
-  position: absolute; top: 28px; left: 0; right: 0;
+  position: absolute; top: 22px; left: 0; right: 0;
   text-align: center; z-index: 10; pointer-events: none;
 }
 .app-title h1 {
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 14px;
-  letter-spacing: 5px; color: rgba(15, 60, 110, 0.75); font-weight: 400;
-}
-.app-title p {
-  font-size: 9px; letter-spacing: 3px;
-  color: rgba(15, 60, 110, 0.45); margin-top: 4px;
+  font-family: 'ZCOOL XiaoWei', serif; font-size: 18px;
+  letter-spacing: 6px; color: rgba(15, 60, 110, 0.88); font-weight: 400;
 }
 
 /* ─── question text ─── */
 #questionEl {
   position: absolute; left: 0; right: 0;
-  top: 13%;
+  top: 17%;
   text-align: center;
   font-family: 'ZCOOL XiaoWei', serif; font-size: 15px; letter-spacing: 1.5px;
   color: rgba(20, 60, 100, 0.92); line-height: 1.9;
@@ -147,62 +143,30 @@ input, select, textarea, button { font-size: 16px; }
 /* ═════════════════════════════════════════════════════════
    HOME PAGE — floating glass bubbles (sky blue theme)
    ═════════════════════════════════════════════════════════ */
-.home-page {
-  position: absolute; inset: 0; z-index: 50;
-  background: linear-gradient(170deg, #cff4ff 0%, #bae6fd 45%, #90d8f5 100%);
-  overflow: hidden;
-  transition: opacity 0.5s ease;
-}
-.home-page.hidden { opacity: 0; pointer-events: none; }
-
-.home-title {
-  position: absolute; top: 56px; left: 0; right: 0;
-  text-align: center;
-  font-family: 'ZCOOL XiaoWei', serif; font-size: 22px;
-  letter-spacing: 8px; color: rgba(15, 60, 110, 0.9);
-  z-index: 5; pointer-events: none;
-}
-.home-stats {
+/* ─── category selector dropdown ─── */
+.category-selector {
   position: absolute;
-  bottom: max(36px, env(safe-area-inset-bottom, 36px));
+  top: 60px;
   left: 50%; transform: translateX(-50%);
-  display: flex; align-items: center; gap: 18px;
-  z-index: 5; pointer-events: none;
+  z-index: 35;
+  padding: 7px 16px 7px 18px;
+  border-radius: 99px;
+  border: 1px solid rgba(70, 130, 180, 0.3);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   font-family: 'ZCOOL XiaoWei', serif;
-  color: rgba(15, 60, 110, 0.7);
-}
-.stat-cell { display: flex; align-items: baseline; gap: 6px; }
-.stat-num  { font-size: 18px; color: rgba(15, 60, 110, 0.95); letter-spacing: 1px; }
-.stat-label{ font-size: 11px; letter-spacing: 3px; color: rgba(15, 60, 110, 0.55); }
-.stat-divider {
-  width: 1px; height: 14px;
-  background: rgba(15, 60, 110, 0.25);
-}
-
-.glass-bubble {
-  position: absolute;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'ZCOOL XiaoWei', serif;
-  letter-spacing: 2px;
-  color: rgba(15, 60, 110, 0.95);
+  font-size: 13px; letter-spacing: 2px;
+  color: rgba(20, 70, 120, 0.85);
   cursor: pointer;
-  white-space: nowrap;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform 0.2s ease;
-  transform: translate(-50%, -50%);
+  appearance: none; -webkit-appearance: none;
+  /* dropdown arrow */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23467090' stroke-width='1.4' fill='none' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 32px;
+  outline: none;
 }
-.glass-bubble:active { transform: translate(-50%, -50%) scale(0.94); }
-
-@keyframes bob {
-  0%, 100% { translate: 0 0; }
-  50%      { translate: 0 -10px; }
-}
-.glass-bubble.bob {
-  animation: bob var(--bob-dur, 4s) ease-in-out infinite;
-  animation-delay: var(--bob-delay, 0s);
-}
+.category-selector:focus { background-color: rgba(255, 255, 255, 0.75); }
 
 #loadingOverlay {
   position: absolute; inset: 0; z-index: 60;
@@ -217,23 +181,14 @@ input, select, textarea, button { font-size: 16px; }
 </head>
 <body>
 
-<!-- ═══════════════ HOME PAGE ═══════════════ -->
-<div class="home-page" id="homePage">
-  <div class="home-title">限制性信念释放</div>
-  <div id="bubblesContainer"></div>
-  <div class="home-stats" id="homeStats">
-    <span class="stat-cell"><span class="stat-num" id="homeStatToday">0</span><span class="stat-label">今日</span></span>
-    <span class="stat-divider"></span>
-    <span class="stat-cell"><span class="stat-num" id="homeStatTotal">0</span><span class="stat-label">累计</span></span>
-  </div>
-</div>
-
 <!-- ═══════════════ CARD / RELEASE PAGE ═══════════════ -->
 <div class="card" id="card">
   <div class="app-title">
     <h1>限制性信念释放</h1>
-    <p>觉察 · 允许 · 释放</p>
   </div>
+  <select class="category-selector" id="categorySelector">
+    <!-- populated by JS -->
+  </select>
   <div id="questionEl"></div>
 
   <svg id="sv" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:5;pointer-events:none;" viewBox="0 0 360 640">
@@ -292,7 +247,6 @@ input, select, textarea, button { font-size: 16px; }
   <button class="act-btn" id="btnCannot">不能</button>
 
   <div id="bottomBar">
-    <button class="bottom-btn" id="backBtn">← 返回</button>
     <span class="bottom-text" id="counterText">今日 0</span>
   </div>
 </div>
@@ -384,7 +338,8 @@ async function loadBeliefs() {
     if (!res.ok) throw new Error('fetch failed');
     BELIEFS = await res.json();
     document.getElementById('loadingOverlay').classList.add('hidden');
-    initHomePage();
+    initCategorySelector();
+    startSession('all'); // auto-start with random
   } catch(e) {
     document.getElementById('loadingOverlay').innerHTML
       = '题库加载失败<br><small style="font-size:11px;">请检查 beliefs.json 是否就位</small>';
@@ -393,101 +348,28 @@ async function loadBeliefs() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  HOME PAGE
+//  CATEGORY SELECTOR (top dropdown)
 // ═══════════════════════════════════════════════════════════
-function initHomePage() {
-  const container = document.getElementById('bubblesContainer');
-  container.innerHTML = '';
-  updateHomeStats();
-
-  const SIZE_RAND = 130;
-  const SIZE_CAT  = 100;
-
-  // each bubble has its own glow color — matching the FREED ecosystem palette
-  const bubbles = [
-    // top: random (large, centered)
-    { id: 'all',       label: '随机',     glow: 'rgba(255,255,255,0.55)',   size: SIZE_RAND, x: 50, y: 24, dur: 4.0, delay: 0.0 },
-    // 2 columns × 3 rows
-    { id: 'money',     label: '金钱',     glow: 'rgba(225,195,80,0.55)',    size: SIZE_CAT,  x: 32, y: 44, dur: 4.5, delay: 0.4 },
-    { id: 'relations', label: '关系',     glow: 'rgba(255,130,155,0.55)',   size: SIZE_CAT,  x: 68, y: 44, dur: 3.8, delay: 0.9 },
-    { id: 'career',    label: '事业',     glow: 'rgba(60,110,200,0.55)',    size: SIZE_CAT,  x: 32, y: 64, dur: 4.2, delay: 0.2 },
-    { id: 'health',    label: '健康',     glow: 'rgba(40,190,140,0.55)',    size: SIZE_CAT,  x: 68, y: 64, dur: 3.6, delay: 1.1 },
-    { id: 'self',      label: '自我价值', glow: 'rgba(190,140,255,0.50)',   size: SIZE_CAT,  x: 32, y: 84, dur: 4.7, delay: 0.7 },
-    { id: 'family',    label: '原生家庭', glow: 'rgba(165,115,75,0.55)',    size: SIZE_CAT,  x: 68, y: 84, dur: 4.1, delay: 0.3 }
-  ];
-
-  bubbles.forEach(b => {
-    const el = document.createElement('div');
-    el.className = 'glass-bubble bob';
-    el.style.left = b.x + '%';
-    el.style.top  = b.y + '%';
-    el.style.width  = b.size + 'px';
-    el.style.height = b.size + 'px';
-    el.style.fontSize = (b.size >= 120 ? 18 : 14) + 'px';
-    el.style.setProperty('--bob-dur', b.dur + 's');
-    el.style.setProperty('--bob-delay', b.delay + 's');
-    el.textContent = b.label;
-    if (b.id === 'all') {
-      applyRainbowBubbleStyle(el);
-    } else {
-      applyGlassBubbleStyle(el, b.glow);
-    }
-    el.onclick = () => startSession(b.id);
-    container.appendChild(el);
+function initCategorySelector() {
+  const sel = document.getElementById('categorySelector');
+  sel.innerHTML = '';
+  // "random" option (default)
+  const randOpt = document.createElement('option');
+  randOpt.value = 'all';
+  randOpt.textContent = '随机';
+  sel.appendChild(randOpt);
+  // category options
+  const cats = BELIEFS.categories;
+  Object.keys(cats).forEach(catId => {
+    const opt = document.createElement('option');
+    opt.value = catId;
+    opt.textContent = cats[catId].name;
+    sel.appendChild(opt);
   });
-}
-
-function applyRainbowBubbleStyle(el) {
-  // soft rainbow conic gradient with white glassy highlight
-  el.style.background = [
-    // top-left white highlight
-    'radial-gradient(circle at 32% 28%, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 35%),',
-    // rainbow body
-    'conic-gradient(from 200deg at 50% 50%,',
-    '  rgba(255,180,180,0.55) 0deg,',
-    '  rgba(255,220,140,0.55) 60deg,',
-    '  rgba(200,255,170,0.55) 120deg,',
-    '  rgba(150,220,255,0.55) 180deg,',
-    '  rgba(190,170,255,0.55) 240deg,',
-    '  rgba(255,170,220,0.55) 300deg,',
-    '  rgba(255,180,180,0.55) 360deg)'
-  ].join(' ');
-  el.style.boxShadow = [
-    'inset 0 0 35px rgba(255,255,255,0.55)',
-    'inset 0 0 14px rgba(220,220,255,0.5)',
-    '0 4px 22px rgba(200,180,230,0.55)',
-    '0 0 32px rgba(255,220,230,0.4)'
-  ].join(', ');
-  el.style.border = 'none';
-}
-
-function applyGlassBubbleStyle(el, glow) {
-  // base alpha used in glow rgba (we replace it to derive different intensities)
-  // same pattern as index.html setNavBubbleColors()
-  const baseAlpha = '0.55';
-  const a30 = glow.replace(baseAlpha, '0.30');
-  const a22 = glow.replace(baseAlpha, '0.22');
-  const a10 = glow.replace(baseAlpha, '0.10');
-  const a75 = glow.replace(baseAlpha, '0.75');
-  const a65 = glow.replace(baseAlpha, '0.65');
-  const a80 = glow.replace(baseAlpha, '0.80');
-  const a45 = glow.replace(baseAlpha, '0.45');
-
-  el.style.background = [
-    'radial-gradient(circle at 32% 28%,',
-    '  rgba(255,255,255,0.78) 0%,',
-    '  rgba(245,245,250,0.45) 22%,',
-    '  ' + a30 + ' 50%,',
-    '  ' + a22 + ' 75%,',
-    '  ' + a10 + ' 100%)'
-  ].join('');
-  el.style.boxShadow = [
-    'inset 0 0 35px ' + a75,
-    'inset 0 0 14px ' + a65,
-    '0 4px 22px ' + a80,
-    '0 0 32px ' + a45
-  ].join(', ');
-  el.style.border = 'none';
+  sel.value = 'all';
+  sel.addEventListener('change', (e) => {
+    startSession(e.target.value);
+  });
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -500,7 +382,13 @@ function startSession(categoryId) {
     : BELIEFS.questions.filter(q => q.category === categoryId);
   CURRENT_QUEUE = shuffle(pool);
   QUEUE_INDEX = 0;
-  document.getElementById('homePage').classList.add('hidden');
+  // clear any in-progress state
+  hideEl('questionEl');
+  hideBtn('btnYes');
+  hideBtn('btnNo');
+  hideBtn('btnCan');
+  hideBtn('btnCannot');
+  clearDesireOrb();
   updateCounter();
   showNextQuestion();
 }
@@ -732,27 +620,10 @@ function updateCounter() {
   document.getElementById('counterText').textContent = '今日 ' + p.todayCount;
 }
 
-function updateHomeStats() {
-  const p = loadProgress();
-  document.getElementById('homeStatToday').textContent = p.todayCount;
-  document.getElementById('homeStatTotal').textContent = p.total;
-}
-
-function returnHome() {
-  document.getElementById('homePage').classList.remove('hidden');
-  updateHomeStats();
-  hideEl('questionEl');
-  hideBtn('btnYes');
-  hideBtn('btnNo');
-  hideBtn('btnCan');
-  hideBtn('btnCannot');
-}
-
 document.getElementById('btnYes').addEventListener('click', onAnswerYes);
 document.getElementById('btnNo').addEventListener('click', onAnswerNo);
 document.getElementById('btnCan').addEventListener('click', onCanRelease);
 document.getElementById('btnCannot').addEventListener('click', onCannotRelease);
-document.getElementById('backBtn').addEventListener('click', returnHome);
 
 loadBeliefs();
 </script>
